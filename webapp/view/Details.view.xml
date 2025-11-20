@@ -1,8 +1,204 @@
+<!-- <mvc:View
+    controllerName="productsreport.controller.Details"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    height="100%"
+>
+    <f:DynamicPage stickySubheaderProvider="iconTabBar">
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="{appJSONModel>/selectedProduct/ProductName}" />
+                </f:heading>
+                <f:actions>
+                    <Button
+                        text="Edit"
+                        type="Transparent"
+                    />
+                    <Button
+                        text="Delete"
+                        type="Emphasized"
+                    />
+                </f:actions>
+            </f:DynamicPageTitle>
+        </f:title>
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <layout:HorizontalLayout allowWrapping="true">
+                    <layout:VerticalLayout class="sapUiMediumMarginEnd">
+                        <ObjectAttribute
+                            title="Category"
+                            text="{appJSONModel>/selectedProduct/Category}"
+                        />
+                        <ObjectAttribute
+                            title="Quantity"
+                            text="{appJSONModel>/selectedProduct/Quantity}"
+                        />
+                    </layout:VerticalLayout>
+
+                    <layout:VerticalLayout>
+                        <ObjectAttribute
+                            title="Producer"
+                            text="{appJSONModel>/selectedProduct/ProducerName}"
+                        />
+                        <ObjectStatus
+                            title="Status"
+                            text="{= ${appJSONModel>/selectedProduct/Quantity} > 100 ? 'Too much' : ${appJSONModel>/selectedProduct/Quantity} > 20 ? 'Good' : 'Not enough' }"
+                            state="{= ${appJSONModel>/selectedProduct/Quantity} > 100 ? 'Error' : ${appJSONModel>/selectedProduct/Quantity} > 20 ? 'Success' : 'Warning'}"
+                        />
+                    </layout:VerticalLayout>
+                </layout:HorizontalLayout>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <IconTabBar id="iconTabBar">
+                <items>
+                    <IconTabFilter text="Product Info">
+                        <Text text="" />
+                    </IconTabFilter>
+                    <IconTabFilter text="Suppliers">
+                        <Text text="" />
+                    </IconTabFilter>
+                </items>
+            </IconTabBar>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View> -->
 <mvc:View
     controllerName="productsreport.controller.Details"
-    xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc"
-    displayBlock="true"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    height="100%"
 >
-    <Page />
+    <f:DynamicPage
+        id="dynamicPageId"
+        stickySubheaderProvider="iconTabBar"
+        class="sapUiNoContentPadding"
+        toggleHeaderOnTitleClick="{/titleClickable}"
+    >
+        <!-- DynamicPage Title -->
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="Header Title" />
+                </f:heading>
+
+                <f:actions>
+                    <Button
+                        text="Edit"
+                        type="Emphasized"
+                    />
+                    <Button
+                        text="Delete"
+                        type="Transparent"
+                    />
+                </f:actions>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <layout:HorizontalLayout allowWrapping="true">
+                    <layout:VerticalLayout class="sapUiMediumMarginEnd">
+                        <ObjectAttribute
+                            title="Category"
+                            text="{appJSONModel>/selectedProduct/Category}"
+                        />
+                        <ObjectAttribute
+                            title="Quantity"
+                            text="{appJSONModel>/selectedProduct/Quantity}"
+                        />
+                    </layout:VerticalLayout>
+
+                    <layout:VerticalLayout>
+                        <ObjectAttribute
+                            title="Producer"
+                            text="{appJSONModel>/selectedProduct/ProducerName}"
+                        />
+                        <ObjectStatus
+                            title="Status"
+                            text="{= ${appJSONModel>/selectedProduct/Quantity} > 100 ? 'Too much' : ${appJSONModel>/selectedProduct/Quantity} > 20 ? 'Good' : 'Not enough' }"
+                            state="{= ${appJSONModel>/selectedProduct/Quantity} > 100 ? 'Error' : ${appJSONModel>/selectedProduct/Quantity} > 20 ? 'Success' : 'Warning'}"
+                        />
+                    </layout:VerticalLayout>
+                </layout:HorizontalLayout>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <IconTabBar
+                id="iconTabBar"
+                class="sapUiResponsiveContentPadding"
+            >
+                <items>
+                    <IconTabFilter text="Products Info">
+                        <VBox>
+                            <HBox
+                                alignItems="Center"
+                                class="sapUiSmallMarginBottom"
+                            >
+                                <Title
+                                    text="Product Info"
+                                    level="H1"
+                                />
+                            </HBox>
+                            <VBox>
+                                <List>
+                                    <StandardListItem
+                                        title="Product Name"
+                                        description="{appJSONModel>/selectedProduct/ProductName}"
+                                    />
+                                    <StandardListItem
+                                        title="Producer"
+                                        description="{appJSONModel>/selectedProduct/ProducerName}"
+                                    />
+                                    <StandardListItem
+                                        title="Category"
+                                        description="{appJSONModel>/selectedProduct/Category}"
+                                    />
+                                    <StandardListItem
+                                        title="Quantity"
+                                        description="{appJSONModel>/selectedProduct/Quantity}"
+                                    />
+                                </List>
+                            </VBox>
+                        </VBox>
+                    </IconTabFilter>
+                    <IconTabFilter text="Suppliers">
+                        <Table
+                            headerText="Suppliers"
+                            items="{appJSONModel>/selectedProduct/Suppliers}"
+                        >
+                            <columns>
+                                <Column>
+                                    <header>
+                                        <Text text="Company Name" />
+                                    </header>
+                                </Column>
+                                <Column>
+                                    <header>
+                                        <Text text="Location" />
+                                    </header>
+                                </Column>
+                                <Column>
+                                    <header>
+                                        <Text text="Email" />
+                                    </header>
+                                </Column>
+                            </columns>
+                            <ColumnListItem>
+                                <Text text="{appJSONModel>SupplierName}" />
+                                <Text text="{appJSONModel>Location}" />
+                                <Text text="{appJSONModel>Email}" />
+                            </ColumnListItem>
+                        </Table>
+                    </IconTabFilter>
+                </items>
+            </IconTabBar>
+        </f:content>
+    </f:DynamicPage>
 </mvc:View>
