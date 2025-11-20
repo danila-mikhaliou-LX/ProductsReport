@@ -1,72 +1,4 @@
-<!-- <mvc:View
-    controllerName="productsreport.controller.Details"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m"
-    xmlns:f="sap.f"
-    xmlns:layout="sap.ui.layout"
-    xmlns:core="sap.ui.core"
-    height="100%"
->
-    <f:DynamicPage stickySubheaderProvider="iconTabBar">
-        <f:title>
-            <f:DynamicPageTitle>
-                <f:heading>
-                    <Title text="{appJSONModel>/selectedProduct/ProductName}" />
-                </f:heading>
-                <f:actions>
-                    <Button
-                        text="Edit"
-                        type="Transparent"
-                    />
-                    <Button
-                        text="Delete"
-                        type="Emphasized"
-                    />
-                </f:actions>
-            </f:DynamicPageTitle>
-        </f:title>
-        <f:header>
-            <f:DynamicPageHeader pinnable="true">
-                <layout:HorizontalLayout allowWrapping="true">
-                    <layout:VerticalLayout class="sapUiMediumMarginEnd">
-                        <ObjectAttribute
-                            title="Category"
-                            text="{appJSONModel>/selectedProduct/Category}"
-                        />
-                        <ObjectAttribute
-                            title="Quantity"
-                            text="{appJSONModel>/selectedProduct/Quantity}"
-                        />
-                    </layout:VerticalLayout>
 
-                    <layout:VerticalLayout>
-                        <ObjectAttribute
-                            title="Producer"
-                            text="{appJSONModel>/selectedProduct/ProducerName}"
-                        />
-                        <ObjectStatus
-                            title="Status"
-                            text="{= ${appJSONModel>/selectedProduct/Quantity} > 100 ? 'Too much' : ${appJSONModel>/selectedProduct/Quantity} > 20 ? 'Good' : 'Not enough' }"
-                            state="{= ${appJSONModel>/selectedProduct/Quantity} > 100 ? 'Error' : ${appJSONModel>/selectedProduct/Quantity} > 20 ? 'Success' : 'Warning'}"
-                        />
-                    </layout:VerticalLayout>
-                </layout:HorizontalLayout>
-            </f:DynamicPageHeader>
-        </f:header>
-        <f:content>
-            <IconTabBar id="iconTabBar">
-                <items>
-                    <IconTabFilter text="Product Info">
-                        <Text text="" />
-                    </IconTabFilter>
-                    <IconTabFilter text="Suppliers">
-                        <Text text="" />
-                    </IconTabFilter>
-                </items>
-            </IconTabBar>
-        </f:content>
-    </f:DynamicPage>
-</mvc:View> -->
 <mvc:View
     controllerName="productsreport.controller.Details"
     xmlns:mvc="sap.ui.core.mvc"
@@ -81,7 +13,6 @@
         class="sapUiNoContentPadding"
         toggleHeaderOnTitleClick="{/titleClickable}"
     >
-        <!-- DynamicPage Title -->
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
