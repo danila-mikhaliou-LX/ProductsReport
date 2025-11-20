@@ -16,6 +16,15 @@ sap.ui.define(['sap/ui/core/UIComponent', 'productsreport/model/models'], (UICom
 
       // enable routing
       this.getRouter().initialize();
+
+      //adding appJSONModel statuses
+      const oAppJSONModel = this.getModel('appJSONModel');
+      oAppJSONModel.setData(
+        {
+          selectedProduct: {},
+        },
+        true,
+      );
     },
   });
 });

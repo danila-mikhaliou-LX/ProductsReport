@@ -52,7 +52,10 @@
           "bundleName": "productsreport.i18n.i18n"
         }
       },
-      "data": { "type": "sap.ui.model.json.JSONModel", "uri": "./model/data.json" }
+      "data": { "type": "sap.ui.model.json.JSONModel", "uri": "./model/data.json" },
+      "appJSONModel": {
+        "type": "sap.ui.model.json.JSONModel"
+      }
     },
     "resources": {
       "css": [
