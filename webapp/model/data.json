@@ -1,0 +1,201 @@
+{
+  "Products": [
+    {
+      "ProductId": "1",
+      "ProductName": "Milk",
+      "ProducerId": "1",
+      "ProducerName": "Our milk company",
+      "CategoryId": "1",
+      "Category": "Dairy products",
+      "Suppliers": [
+        {
+          "SupplierId": "1",
+          "SupplierName": "Bellakt",
+          "Location": ["Minsk", "Moskow", "Vilnius", "Warszawa"],
+          "Email": "bellakt@yandex.ru"
+        },
+        {
+          "SupplierId": "2",
+          "SupplierName": "Milk world",
+          "Location": ["Dallas", "Delhi", "Kyoto"],
+          "Email": "milk.world@gmail.com"
+        }
+      ],
+      "Quantity": 30
+    },
+    {
+      "ProductId": "2",
+      "ProductName": "Apple",
+      "ProducerId": "2",
+      "ProducerName": "Our apple company",
+      "CategoryId": "2",
+      "Category": "Fruits and berries",
+      "Suppliers": [
+        {
+          "SupplierId": "3",
+          "SupplierName": "Apple team",
+          "Location": ["London", "Lyons", "Montreal"],
+          "Email": "apple.team@ttt.cc"
+        },
+        {
+          "SupplierId": "4",
+          "SupplierName": "SA apple company",
+          "Location": ["Riga", "San Francisco"],
+          "Email": "SAapple@us.en"
+        }
+      ],
+      "Quantity": 245
+    },
+    {
+      "ProductId": "3",
+      "ProductName": "Pork",
+      "ProducerId": "3",
+      "ProducerName": "Our pork team",
+      "CategoryId": "3",
+      "Category": "Meat",
+      "Suppliers": [
+        {
+          "SupplierId": "5",
+          "SupplierName": "Porkvita",
+          "Location": ["Minsk", "Moskow", "Warszawa"],
+          "Email": "Porkvita@bel.by"
+        }
+      ],
+      "Quantity": 124
+    },
+    {
+      "ProductId": "4",
+      "ProductName": "Sturgeon",
+      "ProducerId": "4",
+      "ProducerName": "Sturgeon team",
+      "CategoryId": "4",
+      "Category": "Fish",
+      "Suppliers": [
+        {
+          "SupplierId": "6",
+          "SupplierName": "Fish and meat",
+          "Location": ["Oslo", "Prague", "Manila", "Lublin"],
+          "Email": "fish.and.meat@example.com"
+        }
+      ],
+      "Quantity": 80
+    },
+    {
+      "ProductId": "5",
+      "ProductName": "Carrot",
+      "ProducerId": "5",
+      "ProducerName": "Our carrot company",
+      "CategoryId": "5",
+      "Category": "Vegetables",
+      "Suppliers": [
+        {
+          "SupplierId": "7",
+          "SupplierName": "Carrot company",
+          "Location": ["Minsk", "Grodno", "Berlin"],
+          "Email": "carrot@mail.ru"
+        },
+        {
+          "SupplierId": "8",
+          "SupplierName": "Carrot world",
+          "Location": ["Sydney", "Oslo", "Manila", "Minsk", "Grodno"],
+          "Email": "carrot.world@gmail.com"
+        }
+      ],
+      "Quantity": 101
+    }
+  ],
+  "Categories": [
+    {
+      "CategoryId": "1",
+      "CategoryName": "Dairy products"
+    },
+    {
+      "CategoryId": "2",
+      "CategoryName": "Fruits and berries"
+    },
+    {
+      "CategoryId": "3",
+      "CategoryName": "Meat"
+    },
+    {
+      "CategoryId": "4",
+      "CategoryName": "Fish"
+    },
+    {
+      "CategoryId": "5",
+      "CategoryName": "Vegetables"
+    }
+  ],
+  "Suppliers": [
+    {
+      "SupplierId": "1",
+      "SupplierName": "Bellakt",
+      "Location": ["Minsk", "Moskow", "Vilnius", "Warszawa"],
+      "Email": "bellakt@yandex.ru"
+    },
+    {
+      "SupplierId": "2",
+      "SupplierName": "Milk world",
+      "Location": ["Dallas", "Delhi", "Kyoto"],
+      "Email": "milk.world@gmail.com"
+    },
+    {
+      "SupplierId": "3",
+      "SupplierName": "Apple team",
+      "Location": ["London", "Lyons", "Montreal"],
+      "Email": "apple.team@ttt.cc"
+    },
+    {
+      "SupplierId": "4",
+      "SupplierName": "SA apple company",
+      "Location": ["Riga", "San Francisco"],
+      "Email": "SAapple@us.en"
+    },
+    {
+      "SupplierId": "5",
+      "SupplierName": "Porkvita",
+      "Location": ["Minsk", "Moskow", "Warszawa"],
+      "Email": "Porkvita@bel.by"
+    },
+    {
+      "SupplierId": "6",
+      "SupplierName": "Fish and meat",
+      "Location": ["Oslo", "Prague", "Manila", "Lublin"],
+      "Email": "fish.and.meat@example.com"
+    },
+    {
+      "SupplierId": "7",
+      "SupplierName": "Carrot company",
+      "Location": ["Minsk", "Grodno", "Berlin"],
+      "Email": "carrot@mail.ru"
+    },
+    {
+      "SupplierId": "8",
+      "SupplierName": "Carrot world",
+      "Location": ["Sydney", "Oslo", "Manila", "Minsk", "Grodno"],
+      "Email": "carrot.world@gmail.com"
+    }
+  ],
+  "Producers": [
+    {
+      "ProducerId": "1",
+      "ProducerName": "Our milk company"
+    },
+    {
+      "ProducerId": "2",
+      "ProducerName": "Our apple company"
+    },
+    {
+      "ProducerId": "3",
+      "ProducerName": "Our pork team"
+    },
+    {
+      "ProducerId": "4",
+      "ProducerName": "Sturgeon team"
+    },
+    {
+      "ProducerId": "5",
+      "ProducerName": "Our carrot company"
+    }
+  ]
+}

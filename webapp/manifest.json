@@ -51,7 +51,8 @@
         "settings": {
           "bundleName": "productsreport.i18n.i18n"
         }
-      }
+      },
+      "data": { "type": "sap.ui.model.json.JSONModel", "uri": "./model/data.json" }
     },
     "resources": {
       "css": [
@@ -64,7 +65,7 @@
       "config": {
         "routerClass": "sap.m.routing.Router",
         "controlAggregation": "pages",
-        "controlId": "app",
+        "controlId": "App",
         "transition": "slide",
         "type": "View",
         "viewType": "XML",
@@ -74,17 +75,24 @@
       },
       "routes": [
         {
-          "name": "RouteApp",
-          "pattern": ":?query:",
-          "target": [
-            "TargetApp"
-          ]
+          "name": "ListReport",
+          "pattern": "",
+          "target": "ListReport"
+        },
+        {
+          "name": "Details",
+          "pattern": "product/{productId}",
+          "target": "Details"
         }
       ],
       "targets": {
-        "TargetApp": {
-          "id": "App",
-          "name": "App"
+        "ListReport": {
+          "id": "ListReport",
+          "name": "ListReport"
+        },
+        "Details": {
+          "id": "Details",
+          "name": "Details"
         }
       }
     },
