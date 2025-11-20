@@ -1,4 +1,3 @@
-
 <mvc:View
     controllerName="productsreport.controller.Details"
     xmlns:mvc="sap.ui.core.mvc"
@@ -16,16 +15,16 @@
         <f:title>
             <f:DynamicPageTitle>
                 <f:heading>
-                    <Title text="Header Title" />
+                    <Title text="{appJSONModel>/selectedProduct/ProductName}" />
                 </f:heading>
 
                 <f:actions>
                     <Button
-                        text="Edit"
+                        text="{i18n>edit}"
                         type="Emphasized"
                     />
                     <Button
-                        text="Delete"
+                        text="{i18n>delete}"
                         type="Transparent"
                     />
                 </f:actions>
@@ -37,22 +36,22 @@
                 <layout:HorizontalLayout allowWrapping="true">
                     <layout:VerticalLayout class="sapUiMediumMarginEnd">
                         <ObjectAttribute
-                            title="Category"
+                            title="{i18n>category}"
                             text="{appJSONModel>/selectedProduct/Category}"
                         />
                         <ObjectAttribute
-                            title="Quantity"
+                            title="{i18n>quantity}"
                             text="{appJSONModel>/selectedProduct/Quantity}"
                         />
                     </layout:VerticalLayout>
 
                     <layout:VerticalLayout>
                         <ObjectAttribute
-                            title="Producer"
+                            title="{i18n>producer}"
                             text="{appJSONModel>/selectedProduct/ProducerName}"
                         />
                         <ObjectStatus
-                            title="Status"
+                            title="{i18n>status}"
                             text="{= ${appJSONModel>/selectedProduct/Quantity} > 100 ? 'Too much' : ${appJSONModel>/selectedProduct/Quantity} > 20 ? 'Good' : 'Not enough' }"
                             state="{= ${appJSONModel>/selectedProduct/Quantity} > 100 ? 'Error' : ${appJSONModel>/selectedProduct/Quantity} > 20 ? 'Success' : 'Warning'}"
                         />
@@ -73,51 +72,51 @@
                                 class="sapUiSmallMarginBottom"
                             >
                                 <Title
-                                    text="Product Info"
+                                    text="{i18n>productInfo}"
                                     level="H1"
                                 />
                             </HBox>
                             <VBox>
                                 <List>
                                     <StandardListItem
-                                        title="Product Name"
+                                        title="{i18n>productName}"
                                         description="{appJSONModel>/selectedProduct/ProductName}"
                                     />
                                     <StandardListItem
-                                        title="Producer"
+                                        title="{i18n>producer}"
                                         description="{appJSONModel>/selectedProduct/ProducerName}"
                                     />
                                     <StandardListItem
-                                        title="Category"
+                                        title="{i18n>category}"
                                         description="{appJSONModel>/selectedProduct/Category}"
                                     />
                                     <StandardListItem
-                                        title="Quantity"
+                                        title="{i18n>quantity}"
                                         description="{appJSONModel>/selectedProduct/Quantity}"
                                     />
                                 </List>
                             </VBox>
                         </VBox>
                     </IconTabFilter>
-                    <IconTabFilter text="Suppliers">
+                    <IconTabFilter text="{i18n>suppliers}">
                         <Table
-                            headerText="Suppliers"
+                            headerText="{i18n>suppliers}"
                             items="{appJSONModel>/selectedProduct/Suppliers}"
                         >
                             <columns>
                                 <Column>
                                     <header>
-                                        <Text text="Company Name" />
+                                        <Text text="{i18n>companyName}" />
                                     </header>
                                 </Column>
                                 <Column>
                                     <header>
-                                        <Text text="Location" />
+                                        <Text text="{i18n>location}" />
                                     </header>
                                 </Column>
                                 <Column>
                                     <header>
-                                        <Text text="Email" />
+                                        <Text text="{i18n>email}" />
                                     </header>
                                 </Column>
                             </columns>

@@ -62,12 +62,12 @@
 
                     <HBox alignItems="Center">
                         <Button
-                            text="Clear"
+                            text="{i18n>clear}"
                             type="Transparent"
                             press='.onPressNavigateToDetails'
                         />
                         <Button
-                            text="Adapt Filters"
+                            text="{i18n>adaptFilter}"
                             type="Transparent"
                             class="sapUiTinyMarginBegin"
                         />
@@ -83,17 +83,17 @@
                     class="sapUiSmallMarginBottom"
                 >
                     <Title
-                        text="Products ({= ${data>/Products}.length })"
+                        text="{i18n>products} ({= ${data>/Products}.length })"
                         level="H2"
                     />
 
                     <HBox>
                         <Button
-                            text="Delete"
+                            text="{i18n>delete}"
                             enabled="false"
                         />
                         <Button
-                            text="Create"
+                            text="{i18n>create}"
                             class="sapUiTinyMarginBegin"
                         />
                     </HBox>
