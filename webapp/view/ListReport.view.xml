@@ -1,0 +1,161 @@
+<mvc:View
+    controllerName="productsreport.controller.ListReport"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:f="sap.f"
+    xmlns:layout="sap.ui.layout"
+    xmlns:core="sap.ui.core"
+    height="100%"
+>
+    <f:DynamicPage
+        id="ListReport"
+        headerExpanded="{/headerExpanded}"
+        toggleHeaderOnTitleClick="{/titleClickable}"
+    >
+        <f:title>
+            <f:DynamicPageTitle>
+                <f:heading>
+                    <Title text="{i18n>productsTable}" />
+                </f:heading>
+            </f:DynamicPageTitle>
+        </f:title>
+
+        <f:header>
+            <f:DynamicPageHeader pinnable="true">
+                <HBox
+                    width="100%"
+                    justifyContent="SpaceBetween"
+                    alignItems="Center"
+                >
+                    <layout:HorizontalLayout allowWrapping="true">
+                        <layout:VerticalLayout>
+                            <Label text="{i18n>productName}" />
+                            <SearchField width="90%" />
+                        </layout:VerticalLayout>
+
+                        <layout:VerticalLayout>
+                            <Label text="{i18n>category}" />
+                            <ComboBox
+                                width="90%"
+                                items="{data>/Categories}"
+                            >
+                                <core:Item
+                                    key="{data>CategoryId}"
+                                    text="{data>CategoryName}"
+                                />
+                            </ComboBox>
+                        </layout:VerticalLayout>
+
+                        <layout:VerticalLayout>
+                            <Label text="{i18n>producer}" />
+                            <MultiComboBox
+                                width="90%"
+                                items="{data>/Producers}"
+                            >
+                                <core:Item
+                                    key="{data>ProducerId}"
+                                    text="{data>ProducerName}"
+                                />
+                            </MultiComboBox>
+                        </layout:VerticalLayout>
+                    </layout:HorizontalLayout>
+
+                    <HBox alignItems="Center">
+                        <Button
+                            text="Clear"
+                            type="Transparent"
+                            press='.onPressNavigateToDetails'
+                        />
+                        <Button
+                            text="Adapt Filters"
+                            type="Transparent"
+                            class="sapUiTinyMarginBegin"
+                        />
+                    </HBox>
+                </HBox>
+            </f:DynamicPageHeader>
+        </f:header>
+        <f:content>
+            <VBox>
+                <HBox
+                    justifyContent="SpaceBetween"
+                    alignItems="Center"
+                    class="sapUiSmallMarginBottom"
+                >
+                    <Title
+                        text="Products ({= ${data>/Products}.length })"
+                        level="H2"
+                    />
+
+                    <HBox>
+                        <Button
+                            text="Delete"
+                            enabled="false"
+                        />
+                        <Button
+                            text="Create"
+                            class="sapUiTinyMarginBegin"
+                        />
+                    </HBox>
+                </HBox>
+
+                <Table
+                    id="idProductsTable"
+                    sticky="HeaderToolbar,ColumnHeaders"
+                    mode="MultiSelect"
+                    inset="false"
+                    items="{
+							path: 'data>/Products',
+							sorter: {
+								path: 'ProductName'
+							}
+						}"
+                    class="sapFDynamicPageAlignContent"
+                    width="auto"
+                >
+                    <columns>
+                        <Column width="12em">
+                            <Text text="{i18n>productName}" />
+                        </Column>
+                        <Column
+                            minScreenWidth="Tablet"
+                            demandPopin="true"
+                        >
+                            <Text text="{i18n>category}" />
+                        </Column>
+                        <Column
+                            minScreenWidth="Tablet"
+                            demandPopin="true"
+                        >
+                            <Text text="{i18n>producer}" />
+                        </Column>
+                        <Column hAlign="End">
+                            <Text text="{i18n>quantity}" />
+                        </Column>
+                        <Column>
+                            <Text text="{i18n>status}" />
+                        </Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem
+                            type="Navigation"
+                            press=".onPressNavigateToDetails"
+                        >
+                            <cells>
+                                <Text text="{data>ProductName}" />
+                                <Text text="{data>Category}" />
+                                <Text text="{data>ProducerName}" />
+                                <Text text="{data>Quantity}" />
+                                <ObjectStatus
+                                    text="{= ${data>Quantity} > 100 ? 'Too much' :${data>Quantity} > 20 ? 'Good' : 'Not enough'}"
+                                    state="{= ${data>Quantity} > 100 ? 'Error' :${data>Quantity} > 20 ? 'Success' : 'Warning'}"
+                                />
+                                <Button text=">" />
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </f:content>
+    </f:DynamicPage>
+</mvc:View>
