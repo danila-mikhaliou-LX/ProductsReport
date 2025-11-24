@@ -3,6 +3,8 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:f="sap.f"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns:form="sap.ui.layout.form"
     xmlns:layout="sap.ui.layout"
     xmlns:core="sap.ui.core"
     height="100%"
@@ -22,57 +24,67 @@
 
         <f:header>
             <f:DynamicPageHeader pinnable="true">
-                <HBox
-                    width="100%"
-                    justifyContent="SpaceBetween"
-                    alignItems="Center"
-                >
-                    <layout:HorizontalLayout allowWrapping="true">
-                        <layout:VerticalLayout>
-                            <Label text="{i18n>productName}" />
-                            <SearchField width="90%" />
-                        </layout:VerticalLayout>
-
-                        <layout:VerticalLayout>
-                            <Label text="{i18n>category}" />
-                            <ComboBox
-                                width="90%"
-                                items="{data>/Categories}"
+                <f:content>
+                    <fb:FilterBar
+                        useToolbar="false"
+                        showClearOnFB="true"
+                        showGoOnFB="false"
+                    >
+                        <fb:filterGroupItems>
+                            <fb:FilterGroupItem
+                                name="Name"
+                                label="{i18n>productName}"
+                                groupName="productFilter"
+                                visibleInFilterBar="true"
                             >
-                                <core:Item
-                                    key="{data>CategoryId}"
-                                    text="{data>CategoryName}"
-                                />
-                            </ComboBox>
-                        </layout:VerticalLayout>
-
-                        <layout:VerticalLayout>
-                            <Label text="{i18n>producer}" />
-                            <MultiComboBox
-                                width="90%"
-                                items="{data>/Producers}"
+                                <fb:control>
+                                    <SearchField width="90%" />
+                                </fb:control>
+                            </fb:FilterGroupItem>
+                            <fb:FilterGroupItem
+                                name="Category"
+                                label="{i18n>category}"
+                                groupName="productFilter"
+                                visibleInFilterBar="true"
                             >
-                                <core:Item
-                                    key="{data>ProducerId}"
-                                    text="{data>ProducerName}"
-                                />
-                            </MultiComboBox>
-                        </layout:VerticalLayout>
-                    </layout:HorizontalLayout>
-
-                    <HBox alignItems="Center">
-                        <Button
-                            text="{i18n>clear}"
-                            type="Transparent"
-                            press='.onPressNavigateToDetails'
-                        />
-                        <Button
-                            text="{i18n>adaptFilter}"
-                            type="Transparent"
-                            class="sapUiTinyMarginBegin"
-                        />
-                    </HBox>
-                </HBox>
+                                <fb:control>
+                                    <ComboBox
+                                        width="90%"
+                                        items="{data>/Categories}"
+                                    >
+                                        <core:Item
+                                            key="{data>CategoryId}"
+                                            text="{data>CategoryName}"
+                                        />
+                                    </ComboBox>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+                            <fb:FilterGroupItem
+                                name="Producer"
+                                label="{i18n>producer}"
+                                groupName="productFilter"
+                                visibleInFilterBar="true"
+                            >
+                                <fb:control>
+                                    <MultiInput
+                                        id="multiInputWithValueHelp"
+                                        suggestionItems="{path: 'data>/Producers', 
+                                        sorter: {
+                                        path:'ProducerName'}
+                                        }"
+                                        valueHelpRequest="handleValueHelp"
+                                        tokenUpdate="onMultiInputTokenUpdate"
+                                    >
+                                        <core:Item
+                                            key="{data>ProducerId}"
+                                            text="{data>ProducerName}"
+                                        />
+                                    </MultiInput>
+                                </fb:control>
+                            </fb:FilterGroupItem>
+                        </fb:filterGroupItems>
+                    </fb:FilterBar>
+                </f:content>
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
@@ -83,7 +95,10 @@
                     class="sapUiSmallMarginBottom"
                 >
                     <Title
-                        text="{i18n>products} ({= ${data>/Products}.length })"
+                        core:require="{Formatter: 'productsreport/utils/formatter'}"
+                        text="{
+                        parts: ['i18n>productsCount', 'data>/Products/length'],
+                        formatter: 'Formatter.formatProductsCount'}"
                         level="H2"
                     />
 
@@ -147,7 +162,7 @@
                                 <Text text="{data>ProducerName}" />
                                 <Text text="{data>Quantity}" />
                                 <ObjectStatus
-                                    text="{= ${data>Quantity} > 100 ? 'Too much' :${data>Quantity} > 20 ? 'Good' : 'Not enough'}"
+                                    text="{= ${data>Quantity} > 100 ? ${i18n>tooMuch} : ${data>Quantity} > 20 ? ${i18n>good} : ${i18n>notEnough}}"
                                     state="{= ${data>Quantity} > 100 ? 'Error' :${data>Quantity} > 20 ? 'Success' : 'Warning'}"
                                 />
                                 <Button text=">" />

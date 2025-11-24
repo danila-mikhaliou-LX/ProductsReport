@@ -52,10 +52,7 @@
           "bundleName": "productsreport.i18n.i18n"
         }
       },
-      "data": { "type": "sap.ui.model.json.JSONModel", "uri": "./model/data.json" },
-      "appJSONModel": {
-        "type": "sap.ui.model.json.JSONModel"
-      }
+      "data": { "type": "sap.ui.model.json.JSONModel", "uri": "./model/data.json" }
     },
     "resources": {
       "css": [
@@ -83,9 +80,9 @@
           "target": "ListReport"
         },
         {
-          "name": "Details",
-          "pattern": "product/{productId}",
-          "target": "Details"
+          "name": "ProductDetails",
+          "pattern": "ProductDetails/{productId}",
+          "target": "ProductDetails"
         }
       ],
       "targets": {
@@ -93,9 +90,9 @@
           "id": "ListReport",
           "name": "ListReport"
         },
-        "Details": {
-          "id": "Details",
-          "name": "Details"
+        "ProductDetails": {
+          "id": "ProductDetails",
+          "name": "ProductDetails"
         }
       }
     },

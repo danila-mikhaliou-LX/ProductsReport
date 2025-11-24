@@ -1,0 +1,143 @@
+<mvc:View
+    controllerName="productsreport.controller.ProductDetails"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.uxap"
+    xmlns:m="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:forms="sap.ui.layout.form"
+    height="100%"
+>
+    <ObjectPageLayout
+        id="ObjectPageLayout"
+        upperCaseAnchorBar="false"
+    >
+        <headerTitle>
+            <ObjectPageDynamicHeaderTitle>
+                <expandedHeading>
+                    <m:Title text="{viewModel>/selectedProduct/ProductName}" />
+                </expandedHeading>
+
+                <snappedHeading>
+                    <m:Title text="{viewModel>/selectedProduct/ProductName}" />
+                </snappedHeading>
+
+                <actions>
+                    <m:Button
+                        text="{i18n>edit}"
+                        type="Emphasized"
+                    />
+                    <m:Button text="{i18n>Delete}" />
+                </actions>
+            </ObjectPageDynamicHeaderTitle>
+        </headerTitle>
+
+        <headerContent>
+            <m:HBox wrap="Wrap">
+                <m:VBox class="sapUiMediumMarginEnd">
+                    <m:ObjectAttribute
+                        title="{i18n>category}"
+                        text="{viewModel>/selectedProduct/Category}"
+                    />
+                    <m:ObjectAttribute
+                        title="{i18n>quantity}"
+                        text="{viewModel>/selectedProduct/Quantity}"
+                    />
+                </m:VBox>
+                <m:VBox>
+                    <m:ObjectAttribute
+                        title="{i18n>producer}"
+                        text="{viewModel>/selectedProduct/ProducerName}"
+                    />
+                    <m:ObjectStatus
+                        title="{i18n>status}"
+                        text="{= ${viewModel>/selectedProduct/Quantity} > 100 ? ${i18n>tooMuch} : ${viewModel>/selectedProduct/Quantity} > 20 ? ${i18n>good} : ${i18n>notEnough}}"
+                        state="{= ${viewModel>/selectedProduct/Quantity} > 100 ? 'Error' : ${viewModel>/selectedProduct/Quantity} > 20 ? 'Success' : 'Warning'}"
+                    />
+                </m:VBox>
+            </m:HBox>
+        </headerContent>
+
+        <sections>
+            <ObjectPageSection
+                titleUppercase="false"
+                title="{i18n>productInfo}"
+            >
+                <subSections>
+                    <ObjectPageSubSection title="{i18n>productInfo}">
+                        <blocks>
+                            <forms:SimpleForm>
+                                <m:VBox>
+                                    <m:VBox class="sapUiSmallMarginBottom">
+                                        <m:Label text="{i18n>productName}" />
+                                        <m:Text
+                                            text="{viewModel>/selectedProduct/ProductName}"
+                                        />
+                                    </m:VBox>
+                                    <m:VBox class="sapUiSmallMarginBottom">
+                                        <m:Label text="{i18n>producer}" />
+                                        <m:Text
+                                            text="{viewModel>/selectedProduct/ProducerName}"
+                                        />
+                                    </m:VBox>
+                                    <m:VBox class="sapUiSmallMarginBottom">
+                                        <m:Label text="{i18n>category}" />
+                                        <m:Text
+                                            text="{viewModel>/selectedProduct/Category}"
+                                        />
+                                    </m:VBox>
+                                    <m:VBox class="sapUiSmallMarginBottom">
+                                        <m:Label text="{i18n>quantity}" />
+                                        <m:Text
+                                            text="{viewModel>/selectedProduct/Quantity}"
+                                        />
+                                    </m:VBox>
+                                </m:VBox>
+                            </forms:SimpleForm>
+                        </blocks>
+                    </ObjectPageSubSection>
+                </subSections>
+            </ObjectPageSection>
+            <ObjectPageSection
+                titleUppercase="false"
+                title="{i18n>suppliers}"
+            >
+                <subSections>
+                    <ObjectPageSubSection
+                        title="{i18n>suppliers}"
+                        showTitle="true"
+                    >
+                        <blocks>
+                            <m:Table
+                                headerText="{i18n>suppliers}"
+                                items="{viewModel>/selectedProduct/Suppliers}"
+                            >
+                                <m:columns>
+                                    <m:Column>
+                                        <m:header>
+                                            <m:Text text="{i18n>companyName}" />
+                                        </m:header>
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:header>
+                                            <m:Text text="{i18n>location}" />
+                                        </m:header>
+                                    </m:Column>
+                                    <m:Column>
+                                        <m:header>
+                                            <m:Text text="{i18n>email}" />
+                                        </m:header>
+                                    </m:Column>
+                                </m:columns>
+                                <m:ColumnListItem>
+                                    <m:Text text="{viewModel>SupplierName}" />
+                                    <m:Text text="{viewModel>Location}" />
+                                    <m:Text text="{viewModel>Email}" />
+                                </m:ColumnListItem>
+                            </m:Table>
+                        </blocks>
+                    </ObjectPageSubSection>
+                </subSections>
+            </ObjectPageSection>
+        </sections>
+    </ObjectPageLayout>
+</mvc:View>
