@@ -38,7 +38,11 @@
                                 visibleInFilterBar="true"
                             >
                                 <fb:control>
-                                    <SearchField width="90%" />
+                                    <SearchField
+                                        id='searchFieldProducts'
+                                        width="90%"
+                                        liveChange="onSearchAction"
+                                    />
                                 </fb:control>
                             </fb:FilterGroupItem>
                             <fb:FilterGroupItem
@@ -48,15 +52,17 @@
                                 visibleInFilterBar="true"
                             >
                                 <fb:control>
-                                    <ComboBox
+                                    <MultiComboBox
+                                        id="comboBoxProducts"
                                         width="90%"
+                                        selectionChange='onSearchAction'
                                         items="{data>/Categories}"
                                     >
                                         <core:Item
                                             key="{data>CategoryId}"
                                             text="{data>CategoryName}"
                                         />
-                                    </ComboBox>
+                                    </MultiComboBox>
                                 </fb:control>
                             </fb:FilterGroupItem>
                             <fb:FilterGroupItem
@@ -104,8 +110,10 @@
 
                     <HBox>
                         <Button
+                            id='deleteProductBtn'
                             text="{i18n>delete}"
                             enabled="false"
+                            press="onDeleteProducts"
                         />
                         <Button
                             text="{i18n>create}"
@@ -127,6 +135,7 @@
 						}"
                     class="sapFDynamicPageAlignContent"
                     width="auto"
+                    selectionChange="onSelectionChange"
                 >
                     <columns>
                         <Column width="12em">
@@ -162,8 +171,8 @@
                                 <Text text="{data>ProducerName}" />
                                 <Text text="{data>Quantity}" />
                                 <ObjectStatus
-                                    text="{= ${data>Quantity} > 100 ? ${i18n>tooMuch} : ${data>Quantity} > 20 ? ${i18n>good} : ${i18n>notEnough}}"
-                                    state="{= ${data>Quantity} > 100 ? 'Error' :${data>Quantity} > 20 ? 'Success' : 'Warning'}"
+                                    text="{= ${data>Quantity} > 100 ? ${i18n>tooMuch} : ${data>Quantity} > 40 ? ${i18n>good} : ${i18n>notEnough}}"
+                                    state="{= ${data>Quantity} > 100 ? 'Error' :${data>Quantity} > 40 ? 'Success' : 'Warning'}"
                                 />
                                 <Button text=">" />
                             </cells>
