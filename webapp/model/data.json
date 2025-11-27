@@ -3,8 +3,8 @@
     {
       "ProductId": "1",
       "ProductName": "Milk",
-      "ProducerId": "1",
-      "ProducerName": "Our milk company",
+      "ProducerId": "1, 2",
+      "ProducerName": "Our milk company, Our apple company",
       "CategoryId": "1",
       "Category": "Dairy products",
       "Suppliers": [

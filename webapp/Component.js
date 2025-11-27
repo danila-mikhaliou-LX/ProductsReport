@@ -1,4 +1,4 @@
-sap.ui.define(['sap/ui/core/UIComponent', 'productsreport/model/models'], (UIComponent, models) => {
+sap.ui.define(['sap/ui/core/UIComponent'], (UIComponent) => {
   'use strict';
 
   return UIComponent.extend('productsreport.Component', {
@@ -13,15 +13,6 @@ sap.ui.define(['sap/ui/core/UIComponent', 'productsreport/model/models'], (UICom
 
       // enable routing
       this.getRouter().initialize();
-
-      //adding appJSONModel statuses
-      const oAppJSONModel = this.getModel('appJSONModel');
-      oAppJSONModel.setData(
-        {
-          selectedProduct: {},
-        },
-        true,
-      );
     },
   });
 });
