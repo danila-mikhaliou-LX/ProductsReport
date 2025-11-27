@@ -5,11 +5,11 @@
     xmlns:m="sap.m"
     xmlns:core="sap.ui.core"
     xmlns:forms="sap.ui.layout.form"
-    height="100%"
 >
     <ObjectPageLayout
         id="ObjectPageLayout"
         upperCaseAnchorBar="false"
+        showFooter="true"
     >
         <headerTitle>
             <ObjectPageDynamicHeaderTitle>
@@ -75,81 +75,81 @@
                                 <m:VBox id='productInfo'>
                                     <m:VBox class="sapUiSmallMarginBottom">
                                         <m:Label text="{i18n>productName}" />
-                                        <m:Text
-                                            text="{viewModel>/selectedProduct/ProductName}"
-                                        />
+                                        <m:VBox>
+                                            <m:Text
+                                                visible="{= !${viewModel>/editMode}}"
+                                                text="{viewModel>/selectedProduct/ProductName}"
+                                            />
+                                            <m:Input
+                                                visible="{= ${viewModel>/editMode}}"
+                                                value="{viewModel>/initialSelectedProduct/ProductName}"
+                                                width="60%"
+                                            />
+                                        </m:VBox>
                                     </m:VBox>
                                     <m:VBox class="sapUiSmallMarginBottom">
                                         <m:Label text="{i18n>producer}" />
-                                        <m:Text
-                                            text="{viewModel>/selectedProduct/ProducerName}"
-                                        />
-                                    </m:VBox>
-                                    <m:VBox class="sapUiSmallMarginBottom">
-                                        <m:Label text="{i18n>category}" />
-                                        <m:Text
-                                            text="{viewModel>/selectedProduct/Category}"
-                                        />
-                                    </m:VBox>
-                                    <m:VBox class="sapUiSmallMarginBottom">
-                                        <m:Label text="{i18n>quantity}" />
-                                        <m:Text
-                                            text="{viewModel>/selectedProduct/Quantity}"
-                                        />
-                                    </m:VBox>
-                                </m:VBox>
-                                <m:VBox id="productEdit">
-                                    <m:VBox class="sapUiSmallMarginBottom">
-                                        <m:Label text="{i18n>productName}" />
-                                        <m:Input
-                                            value="{viewModel>/selectedProduct/ProductName}"
-                                            width="60%"
-                                        />
-                                    </m:VBox>
 
-                                    <m:VBox class="sapUiSmallMarginBottom">
-                                        <m:Label text="{i18n>producer}" />
-                                        <m:MultiInput
-                                            id="multiInputWithValueHelpEdit"
-                                            width="60%"
-                                            suggestionItems="{path: 'data>/Producers', 
+                                        <m:VBox>
+                                            <m:Text
+                                                visible="{= !${viewModel>/editMode}}"
+                                                text="{viewModel>/selectedProduct/ProducerName}"
+                                            />
+                                            <m:MultiInput
+                                                visible="{= ${viewModel>/editMode}}"
+                                                id="multiInputWithValueHelpEdit"
+                                                width="60%"
+                                                suggestionItems="{path: 'data>/Producers', 
                                         sorter: {
                                         path:'ProducerName'}
                                         }"
-                                            valueHelpRequest="handleValueHelpEdit"
-                                            tokenUpdate="onMultiInputTokenUpdate"
-                                        >
-                                            <core:Item
-                                                key="{data>ProducerId}"
-                                                text="{data>ProducerName}"
-                                            />
-                                        </m:MultiInput>
+                                                valueHelpRequest="handleValueHelpEdit"
+                                                tokenUpdate="onMultiInputTokenUpdate"
+                                            >
+                                                <core:Item
+                                                    key="{data>ProducerId}"
+                                                    text="{data>ProducerName}"
+                                                />
+                                            </m:MultiInput>
+                                        </m:VBox>
                                     </m:VBox>
-
                                     <m:VBox class="sapUiSmallMarginBottom">
                                         <m:Label text="{i18n>category}" />
-                                        <m:MultiComboBox
-                                            id="comboBoxEditProducts"
-                                            width="60%"
-                                            selectionChange='onSelectionChange'
-                                            items="{data>/Categories}"
-                                            selectedKeys="{viewModel>/selectedProduct/CategoryId}"
-                                            selectedItems="{viewModel>/selectedProduct/CategoryName}"
-                                        >
-                                            <core:Item
-                                                key="{data>CategoryId}"
-                                                text="{data>CategoryName}"
+                                        <m:VBox>
+                                            <m:Text
+                                                visible="{= !${viewModel>/editMode}}"
+                                                text="{viewModel>/selectedProduct/Category}"
                                             />
-                                        </m:MultiComboBox>
+                                            <m:MultiComboBox
+                                                visible="{= ${viewModel>/editMode}}"
+                                                id="comboBoxEditProducts"
+                                                width="60%"
+                                                selectionChange='onSelectionChange'
+                                                items="{data>/Categories}"
+                                                selectedKeys="{viewModel>/initialSelectedProduct/CategoryId}"
+                                                selectedItems="{viewModel>/initialSelectedProduct/CategoryName}"
+                                            >
+                                                <core:Item
+                                                    key="{data>CategoryId}"
+                                                    text="{data>CategoryName}"
+                                                />
+                                            </m:MultiComboBox>
+                                        </m:VBox>
                                     </m:VBox>
-
                                     <m:VBox class="sapUiSmallMarginBottom">
                                         <m:Label text="{i18n>quantity}" />
-                                        <m:Input
-                                            value="{viewModel>/selectedProduct/Quantity}"
-                                            type="Number"
-                                            width="60%"
-                                        />
+                                        <m:VBox>
+                                            <m:Text
+                                                visible="{= !${viewModel>/editMode}}"
+                                                text="{viewModel>/selectedProduct/Quantity}"
+                                            />
+                                            <m:Input
+                                                visible="{= ${viewModel>/editMode}}"
+                                                value="{viewModel>/initialSelectedProduct/Quantity}"
+                                                type="Number"
+                                                width="60%"
+                                            />
+                                        </m:VBox>
                                     </m:VBox>
                                 </m:VBox>
                             </forms:SimpleForm>
@@ -168,9 +168,30 @@
                     >
                         <blocks>
                             <m:Table
+                                id="suppliersTable"
                                 headerText="{i18n>suppliers}"
-                                items="{viewModel>/selectedProduct/Suppliers}"
+                                items="{viewModel>/initialSelectedProduct/Suppliers}"
+                                mode="{= ${viewModel>/editMode} ? 'MultiSelect': 'None'}"
+                                selectionChange="onSelectionSuppliersChange"
                             >
+                                <m:headerToolbar>
+                                    <m:OverflowToolbar>
+                                        <m:Title text="{i18n>suppliers}" />
+
+                                        <m:ToolbarSpacer />
+                                        <m:Button
+                                            visible="{= ${viewModel>/editMode}}"
+                                            text="{i18n>create}"
+                                        />
+                                        <m:Button
+                                            id="deleteSupplierButton"
+                                            press="onPressDeleteSupplier"
+                                            enabled="false"
+                                            visible="{= ${viewModel>/editMode}}"
+                                            text="{i18n>delete}"
+                                        />
+                                    </m:OverflowToolbar>
+                                </m:headerToolbar>
                                 <m:columns>
                                     <m:Column>
                                         <m:header>
@@ -189,9 +210,32 @@
                                     </m:Column>
                                 </m:columns>
                                 <m:ColumnListItem>
-                                    <m:Text text="{viewModel>SupplierName}" />
-                                    <m:Text text="{viewModel>Location}" />
-                                    <m:Text text="{viewModel>Email}" />
+                                    <m:VBox>
+                                        <m:Text
+                                            visible="{= !${viewModel>/editMode}}"
+                                            text="{viewModel>SupplierName}"
+                                        />
+
+                                        <m:ComboBox
+                                            visible="{= ${viewModel>/editMode}}"
+                                            selectedKey="{viewModel>SupplierId}"
+                                            selectedItem="{viewModel>SupplierName}"
+                                            selectionChange='onChangeSuppliersSelect'
+                                            items="{data>/Suppliers}"
+                                            id='suppliersComboBox'
+                                        >
+                                            <core:Item
+                                                key="{data>SupplierId}"
+                                                text="{data>SupplierName}"
+                                            />
+                                        </m:ComboBox>
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Text text="{viewModel>Location}" />
+                                    </m:VBox>
+                                    <m:VBox>
+                                        <m:Text text="{viewModel>Email}" />
+                                    </m:VBox>
                                 </m:ColumnListItem>
                             </m:Table>
                         </blocks>
@@ -199,5 +243,22 @@
                 </subSections>
             </ObjectPageSection>
         </sections>
+
+        <footer>
+            <m:OverflowToolbar visible="{= ${viewModel>/editMode}}">
+                <m:ToolbarSpacer />
+                <m:Button
+                    type="Accept"
+                    text="{i18n>save}"
+                    press="onPressOkEdit"
+                />
+                <m:Button
+                    id="cancelEditModeBtn"
+                    type="Reject"
+                    text="{i18n>reset}"
+                    press="onPressCancelEdit"
+                />
+            </m:OverflowToolbar>
+        </footer>
     </ObjectPageLayout>
 </mvc:View>

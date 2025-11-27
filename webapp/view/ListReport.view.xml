@@ -29,6 +29,7 @@
                         useToolbar="false"
                         showClearOnFB="true"
                         showGoOnFB="false"
+                        clear="onClearPress"
                     >
                         <fb:filterGroupItems>
                             <fb:FilterGroupItem
@@ -80,6 +81,7 @@
                                         }"
                                         valueHelpRequest="handleValueHelp"
                                         tokenUpdate="onMultiInputTokenUpdate"
+                                        onChange='onMultiInputTokenUpdate'
                                     >
                                         <core:Item
                                             key="{data>ProducerId}"

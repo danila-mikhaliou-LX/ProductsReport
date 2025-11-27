@@ -74,7 +74,7 @@ sap.ui.define(
         );
         aValueMultiInput.forEach((oValueMultiInput) =>
           aFilter.push(
-            new Filter('ProducerName', FilterOperator.EQ, oValueMultiInput.getText().slice(0, -4)),
+            new Filter('ProducerId', FilterOperator.Contains, oValueMultiInput.getKey()),
           ),
         );
         this.byId('idProductsTable').getBinding('items').filter(aFilter);
@@ -90,8 +90,9 @@ sap.ui.define(
       },
 
       onSelectionChange(oEvent) {
+        const oDeleteButton = this.byId('deleteProductBtn');
         if (oEvent.getSource().getSelectedItems().length) {
-          const oDeleteButton = this.byId('deleteProductBtn').setEnabled(true);
+          oDeleteButton.setEnabled(true);
 
           oEvent
             .getSource()
@@ -100,19 +101,14 @@ sap.ui.define(
               (selectedProduct) => selectedProduct.getBindingContext('data').getObject().ProductId,
             );
         } else {
-          const oDeleteButton = this.byId('deleteProductBtn').setEnabled(false);
+          oDeleteButton.setEnabled(false);
         }
       },
 
       onDeleteProducts() {
-        const sProductDeleteConfirmationText = this.getView()
-          .getModel('i18n')
-          .getResourceBundle()
-          .getText('productDeleteConfirmation');
-        const sProductMultiDeleteConfirmationText = this.getView()
-          .getModel('i18n')
-          .getResourceBundle()
-          .getText('productMultiDeleteConfirmation');
+        const oI18n = this.getView().getModel('i18n').getResourceBundle();
+        const sProductDeleteConfirmationText = oI18n.getText('productDeleteConfirmation');
+        const sProductMultiDeleteConfirmationText = oI18n.getText('productMultiDeleteConfirmation');
         const oProductModel = this.getView().getModel('data');
         const oProductTable = this.byId('idProductsTable');
         const aSelectedProducts = oProductTable
@@ -159,6 +155,14 @@ sap.ui.define(
             },
           });
         }
+      },
+
+      onClearPress() {
+        this.byId('searchFieldProducts').clear();
+        this.byId('comboBoxProducts').removeAllSelectedItems();
+        this.byId('comboBoxProducts').removeSelectedKeys();
+        this.byId('multiInputWithValueHelp').destroyTokens();
+        this.onSearchAction();
       },
     });
   },
