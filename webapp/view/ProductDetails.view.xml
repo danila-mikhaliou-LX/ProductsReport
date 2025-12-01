@@ -23,15 +23,17 @@
 
                 <actions>
                     <m:Button
-                        id="deleteSelectedProductButton"
+                        id="editSelectedProductButton"
                         text="{i18n>edit}"
                         type="Emphasized"
                         press="onEditPress"
+                        visible="{= !${viewModel>/editMode}}"
                     />
                     <m:Button
-                        id="editSelectedProductButton"
+                        id="deleteSelectedProductButton"
                         text="{i18n>Delete}"
                         press="onDeleteProductPress"
+                        visible="{= !${viewModel>/editMode}}"
                     />
                 </actions>
             </ObjectPageDynamicHeaderTitle>
@@ -103,7 +105,7 @@
                                         sorter: {
                                         path:'ProducerName'}
                                         }"
-                                                valueHelpRequest="handleValueHelpEdit"
+                                                valueHelpRequest="handleValueHelp"
                                                 tokenUpdate="onMultiInputTokenUpdate"
                                             >
                                                 <core:Item

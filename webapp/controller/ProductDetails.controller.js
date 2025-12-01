@@ -1,11 +1,6 @@
 sap.ui.define(
-  [
-    'productsreport/controller/BaseController',
-    'sap/ui/model/json/JSONModel',
-    'sap/m/MessageBox',
-    'productsreport/utils/formatter',
-  ],
-  (BaseController, JSONModel, MessageBox, Formatter) => {
+  ['productsreport/controller/BaseController', 'sap/ui/model/json/JSONModel', 'sap/m/MessageBox'],
+  (BaseController, JSONModel, MessageBox) => {
     'use strict';
 
     return BaseController.extend('productsreport.controller.ProductDetails', {
@@ -23,8 +18,6 @@ sap.ui.define(
       },
 
       onPatternMatched(oEvent) {
-        this.byId('deleteSelectedProductButton').setEnabled(true);
-        this.byId('editSelectedProductButton').setEnabled(true);
         this.getView().getModel('viewModel').setProperty('/editMode', false);
 
         const sProductId = oEvent.getParameter('arguments').productId;
@@ -40,42 +33,33 @@ sap.ui.define(
       },
 
       onDeleteProductPress() {
-        const sProductDeleteConfirmationText = this.getView()
-          .getModel('i18n')
-          .getResourceBundle()
-          .getText('productDeleteConfirmation');
-
         const aProductModel = this.getView().getModel('data').getProperty('/Products');
         const oSelectedProductModel = this.getView()
           .getModel('viewModel')
           .getProperty('/selectedProduct');
 
-        const sFormattedTextSingleConfirmation = Formatter.formatProductsCount(
-          sProductDeleteConfirmationText,
-          oSelectedProductModel.ProductName,
-        );
-
-        MessageBox.confirm(sFormattedTextSingleConfirmation, {
-          action: [MessageBox.Action.OK],
-          onClose: (sAction) => {
-            if (sAction === MessageBox.Action.OK) {
-              const aFilteredProductsModel = aProductModel.filter(
-                (oProductModel) => oProductModel.ProductId !== oSelectedProductModel.ProductId,
-              );
-              this.getView().getModel('data').setProperty('/Products', aFilteredProductsModel);
-              this._navigate('ListReport');
-            }
+        MessageBox.confirm(
+          this._i18n('productDeleteConfirmation', oSelectedProductModel.ProductName),
+          {
+            action: [MessageBox.Action.OK],
+            onClose: (sAction) => {
+              if (sAction === MessageBox.Action.OK) {
+                const aFilteredProductsModel = aProductModel.filter(
+                  (oProductModel) => oProductModel.ProductId !== oSelectedProductModel.ProductId,
+                );
+                this.getView().getModel('data').setProperty('/Products', aFilteredProductsModel);
+                this._navigate('ListReport');
+              }
+            },
           },
-        });
+        );
       },
 
-      async onEditPress() {
+      onEditPress() {
         const oViewModel = this.getView().getModel('viewModel');
         const oInitialSelectedProduct = oViewModel.getProperty('/initialSelectedProduct');
         const oMultiInputEdit = this.byId('multiInputWithValueHelpEdit');
         oViewModel.setProperty('/editMode', true);
-        this.byId('deleteSelectedProductButton').setEnabled(false);
-        this.byId('editSelectedProductButton').setEnabled(false);
 
         const aSelectedProductTokens = [];
 
@@ -93,36 +77,8 @@ sap.ui.define(
         oMultiInputEdit.setTokens(aSelectedProductTokens);
       },
 
-      async handleValueHelpEdit() {
-        const oMultiInputEdit = this.byId('multiInputWithValueHelpEdit');
-
-        if (!this.oDialogEdit) {
-          this.oDialogEdit = await this.loadFragment({
-            name: 'productsreport.fragment.ValueHelpDialog',
-          });
-          const oTable = new sap.ui.table.Table({
-            visibleRowCount: 10,
-            selectionMode: 'Multi',
-          });
-          oTable.addColumn(
-            new sap.ui.table.Column({
-              label: new sap.m.Label({ text: 'Producer Name' }),
-              template: new sap.m.Text({ text: '{data>ProducerName}' }),
-            }),
-          );
-
-          oTable.bindRows('data>/Producers');
-
-          const aTokens = oMultiInputEdit.getTokens();
-
-          this.oDialogEdit.setTokens(aTokens);
-          this.oDialogEdit.setTable(oTable);
-        } else {
-          this.oDialogEdit.setTokens(oMultiInputEdit.getTokens());
-        }
-
-        this.oDialogEdit.update();
-        this.oDialogEdit.open();
+      async handleValueHelp() {
+        await this._handleValueHelp('multiInputWithValueHelpEdit');
       },
 
       onMultiInputTokenUpdate(oEvent) {
@@ -146,12 +102,11 @@ sap.ui.define(
               .replace(/\s*\(\d+\)/g, '');
             oInitialSelectedProduct.ProducerId = aProducerId.join(', ');
           });
-        } else if (aUpdatedTokens.length === 0) {
-          oInitialSelectedProduct.ProducerName = '';
-          oInitialSelectedProduct.ProducerId = '';
         } else {
-          oInitialSelectedProduct.ProducerName = aUpdatedTokens.getText();
-          oInitialSelectedProduct.ProducerId = aUpdatedTokens.getKey();
+          oInitialSelectedProduct.ProducerName = aUpdatedTokens.length
+            ? aUpdatedTokens.getText()
+            : '';
+          oInitialSelectedProduct.ProducerId = aUpdatedTokens.length ? aUpdatedTokens.getKey() : '';
         }
         oViewModel.refresh();
         oMultiInputEdit.setTokens(aUpdatedTokens);
@@ -176,16 +131,16 @@ sap.ui.define(
 
         oViewModel.refresh();
         oMultiInput.setTokens(aTokens);
-        this.oDialogEdit.setTokens(aTokens);
-        this.oDialogEdit.close();
+        this.oDialog.setTokens(aTokens);
+        this.oDialog.close();
       },
 
       onCloseValueHelp() {
-        this.oDialogEdit.close();
+        this.oDialog.close();
       },
 
       onAfterCloseValueHelp() {
-        this.oDialogEdit.setTokens([]);
+        this.oDialog.setTokens([]);
       },
 
       onSelectionChange(oEvent) {
@@ -209,19 +164,13 @@ sap.ui.define(
 
       onPressCancelEdit() {
         const oViewModel = this.getView().getModel('viewModel');
-        const sResetAllChangesConfirmation = this.getView()
-          .getModel('i18n')
-          .getResourceBundle()
-          .getText('resetAllChangesConfirmation');
 
-        MessageBox.confirm(sResetAllChangesConfirmation, {
+        MessageBox.confirm(this._i18n('resetAllChangesConfirmation'), {
           actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
           emphasizedAction: MessageBox.Action.OK,
           onClose: (sAction) => {
             if (sAction === MessageBox.Action.OK) {
               oViewModel.setProperty('/editMode', false);
-              this.byId('deleteSelectedProductButton').setEnabled(true);
-              this.byId('editSelectedProductButton').setEnabled(true);
 
               oViewModel.setProperty(
                 '/initialSelectedProduct',
@@ -237,8 +186,6 @@ sap.ui.define(
         const oData = this.getView().getModel('data');
 
         oViewModel.setProperty('/editMode', false);
-        this.byId('deleteSelectedProductButton').setEnabled(true);
-        this.byId('editSelectedProductButton').setEnabled(true);
 
         const aProducts = oData.getProperty('/Products');
         const oInitialSelectedProduct = oViewModel.getProperty('/initialSelectedProduct');
@@ -254,14 +201,6 @@ sap.ui.define(
       },
 
       onPressDeleteSupplier() {
-        const sDeleteSupplierConfirmation = this.getView()
-          .getModel('i18n')
-          .getResourceBundle()
-          .getText('supplierDeleteConfirmation');
-        const sMultiDeleteSupplierConfirmation = this.getView()
-          .getModel('i18n')
-          .getResourceBundle()
-          .getText('supplierMultiDeleteConfirmation');
         const oViewModel = this.getView().getModel('viewModel');
         const oInitialSelectedProduct = oViewModel.getProperty('/initialSelectedProduct');
         const oSuppliersTable = this.byId('suppliersTable');
@@ -274,18 +213,16 @@ sap.ui.define(
             (oSelectedSupplier) =>
               oSelectedSupplier.getBindingContext('viewModel').getObject().SupplierId,
           );
-        const sFormattedDeleteSupplier = Formatter.formatProductsCount(
-          sDeleteSupplierConfirmation,
-          oSuppliersTable.getSelectedItems()[0].getBindingContext('viewModel').getObject()
-            .SupplierName,
-        );
-        const sFormattedMultiDeleteSupplier = Formatter.formatProductsCount(
-          sMultiDeleteSupplierConfirmation,
-          aSelectedSuppliers.length,
-        );
 
-        if (aSelectedSuppliers === 1) {
-          MessageBox.confirm(sFormattedDeleteSupplier, {
+        MessageBox.confirm(
+          aSelectedSuppliers.length === 1
+            ? this._i18n(
+                'supplierDeleteConfirmation',
+                oSuppliersTable.getSelectedItems()[0].getBindingContext('viewModel').getObject()
+                  .SupplierName,
+              )
+            : this._i18n('supplierMultiDeleteConfirmation', aSelectedSuppliers.length),
+          {
             actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
             emphasizedAction: MessageBox.Action.OK,
             onClose: (sAction) => {
@@ -298,33 +235,14 @@ sap.ui.define(
                 oViewModel.refresh();
               }
             },
-          });
-        } else {
-          MessageBox.confirm(sFormattedMultiDeleteSupplier, {
-            actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
-            emphasizedAction: MessageBox.Action.OK,
-            onClose: (sAction) => {
-              if (sAction === MessageBox.Action.OK) {
-                aSelectedSuppliers.forEach((sSupplierId) => {
-                  aSupplier = aSupplier.filter((oSupplier) => oSupplier.SupplierId !== sSupplierId);
-                });
-                oInitialSelectedProduct.Suppliers = [...aSupplier];
-                oSuppliersTable.removeSelections();
-                oViewModel.refresh();
-              }
-            },
-          });
-        }
+          },
+        );
       },
 
       onSelectionSuppliersChange(oEvent) {
         const oDeleteSupplierButton = this.byId('deleteSupplierButton');
 
-        if (oEvent.getSource().getSelectedItems().length) {
-          oDeleteSupplierButton.setEnabled(true);
-        } else {
-          oDeleteSupplierButton.setEnabled(false);
-        }
+        oDeleteSupplierButton.setEnabled(!!oEvent.getSource().getSelectedItems().length);
       },
       onChangeSuppliersSelect() {
         const oSuppliersTable = this.byId('suppliersTable');

@@ -4,9 +4,8 @@ sap.ui.define(
     'sap/ui/model/Filter',
     'sap/ui/model/FilterOperator',
     'sap/m/MessageBox',
-    'productsreport/utils/formatter',
   ],
-  (BaseController, Filter, FilterOperator, MessageBox, Formatter) => {
+  (BaseController, Filter, FilterOperator, MessageBox) => {
     'use strict';
 
     return BaseController.extend('productsreport.controller.ListReport', {
@@ -18,31 +17,7 @@ sap.ui.define(
       },
 
       async handleValueHelp() {
-        if (!this.oDialog) {
-          this.oDialog = await this.loadFragment({
-            name: 'productsreport.fragment.ValueHelpDialog',
-          });
-
-          const oTable = new sap.ui.table.Table({
-            visibleRowCount: 10,
-            selectionMode: 'Multi',
-          });
-
-          oTable.addColumn(
-            new sap.ui.table.Column({
-              label: new sap.m.Label({ text: 'Producer Name' }),
-              template: new sap.m.Text({ text: '{data>ProducerName}' }),
-            }),
-          );
-
-          oTable.bindRows('data>/Producers');
-
-          this.oDialog.setTable(oTable);
-        }
-
-        this.oDialog.setTokens(this.byId('multiInputWithValueHelp').getTokens());
-        this.oDialog.update();
-        this.oDialog.open();
+        await this._handleValueHelp('multiInputWithValueHelp');
       },
 
       onValueHelpOkPress(oEvent) {
@@ -106,9 +81,6 @@ sap.ui.define(
       },
 
       onDeleteProducts() {
-        const oI18n = this.getView().getModel('i18n').getResourceBundle();
-        const sProductDeleteConfirmationText = oI18n.getText('productDeleteConfirmation');
-        const sProductMultiDeleteConfirmationText = oI18n.getText('productMultiDeleteConfirmation');
         const oProductModel = this.getView().getModel('data');
         const oProductTable = this.byId('idProductsTable');
         const aSelectedProducts = oProductTable
@@ -124,18 +96,11 @@ sap.ui.define(
             )),
         );
 
-        const sFormattedTextSingleConfirmation = Formatter.formatProductsCount(
-          sProductDeleteConfirmationText,
-          aSelectedProducts[0].ProductName,
-        );
-
-        const sFormattedTextMultiConfirmation = Formatter.formatProductsCount(
-          sProductMultiDeleteConfirmationText,
-          aSelectedProducts.length,
-        );
-
-        if (aSelectedProducts.length === 1) {
-          MessageBox.confirm(sFormattedTextSingleConfirmation, {
+        MessageBox.confirm(
+          aSelectedProducts.length === 1
+            ? this._i18n('productDeleteConfirmation', aSelectedProducts[0].ProductName)
+            : this._i18n('productMultiDeleteConfirmation', aSelectedProducts.length),
+          {
             action: [MessageBox.Action.OK],
             onClose: (sAction) => {
               if (sAction === MessageBox.Action.OK) {
@@ -143,18 +108,8 @@ sap.ui.define(
                   oProductTable.removeSelections(true);
               }
             },
-          });
-        } else {
-          MessageBox.confirm(sFormattedTextMultiConfirmation, {
-            action: [MessageBox.Action.OK],
-            onClose: (sAction) => {
-              if (sAction === MessageBox.Action.OK) {
-                oProductModel.setProperty('/Products', aProducts),
-                  oProductTable.removeSelections(true);
-              }
-            },
-          });
-        }
+          },
+        );
       },
 
       onClearPress() {
