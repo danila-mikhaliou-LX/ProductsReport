@@ -81,7 +81,7 @@
         },
         {
           "name": "ProductDetails",
-          "pattern": "ProductDetails/{productId}",
+          "pattern": "ProductDetails/{productId}/:create:",
           "target": "ProductDetails"
         }
       ],

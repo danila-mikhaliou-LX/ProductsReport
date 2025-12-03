@@ -76,21 +76,31 @@
                             <forms:SimpleForm>
                                 <m:VBox id='productInfo'>
                                     <m:VBox class="sapUiSmallMarginBottom">
-                                        <m:Label text="{i18n>productName}" />
+                                        <m:Label
+                                            text="{i18n>productName}"
+                                            required="{= ${viewModel>/editMode}}"
+                                        />
                                         <m:VBox>
                                             <m:Text
                                                 visible="{= !${viewModel>/editMode}}"
                                                 text="{viewModel>/selectedProduct/ProductName}"
                                             />
                                             <m:Input
+                                                fieldGroupIds="editInput"
                                                 visible="{= ${viewModel>/editMode}}"
-                                                value="{viewModel>/initialSelectedProduct/ProductName}"
+                                                value="{ 
+                                                  path: 'viewModel>/initialSelectedProduct/ProductName',
+                                                  type: 'sap.ui.model.type.String',
+                                                  constraints: { minLength: 2 }}"
                                                 width="60%"
                                             />
                                         </m:VBox>
                                     </m:VBox>
                                     <m:VBox class="sapUiSmallMarginBottom">
-                                        <m:Label text="{i18n>producer}" />
+                                        <m:Label
+                                            text="{i18n>producer}"
+                                            required="{= ${viewModel>/editMode}}"
+                                        />
 
                                         <m:VBox>
                                             <m:Text
@@ -116,7 +126,10 @@
                                         </m:VBox>
                                     </m:VBox>
                                     <m:VBox class="sapUiSmallMarginBottom">
-                                        <m:Label text="{i18n>category}" />
+                                        <m:Label
+                                            text="{i18n>category}"
+                                            required="{= ${viewModel>/editMode}}"
+                                        />
                                         <m:VBox>
                                             <m:Text
                                                 visible="{= !${viewModel>/editMode}}"
@@ -139,15 +152,25 @@
                                         </m:VBox>
                                     </m:VBox>
                                     <m:VBox class="sapUiSmallMarginBottom">
-                                        <m:Label text="{i18n>quantity}" />
+                                        <m:Label
+                                            text="{i18n>quantity}"
+                                            required="{= ${viewModel>/editMode}}"
+                                        />
                                         <m:VBox>
                                             <m:Text
                                                 visible="{= !${viewModel>/editMode}}"
                                                 text="{viewModel>/selectedProduct/Quantity}"
                                             />
                                             <m:Input
+                                                fieldGroupIds="editInput"
                                                 visible="{= ${viewModel>/editMode}}"
-                                                value="{viewModel>/initialSelectedProduct/Quantity}"
+                                                value="{ path: 'viewModel>/initialSelectedProduct/Quantity',
+                                                type:'sap.ui.model.type.Integer',
+                                                constraints: {
+                                                minimum: 1,
+                                                maximum: 100
+                                                }
+                                                }"
                                                 type="Number"
                                                 width="60%"
                                             />
@@ -184,6 +207,7 @@
                                         <m:Button
                                             visible="{= ${viewModel>/editMode}}"
                                             text="{i18n>create}"
+                                            press="onPressCreateSupplier"
                                         />
                                         <m:Button
                                             id="deleteSupplierButton"
@@ -232,12 +256,10 @@
                                             />
                                         </m:ComboBox>
                                     </m:VBox>
-                                    <m:VBox>
-                                        <m:Text text="{viewModel>Location}" />
-                                    </m:VBox>
-                                    <m:VBox>
-                                        <m:Text text="{viewModel>Email}" />
-                                    </m:VBox>
+
+                                    <m:Text text="{viewModel>Location}" />
+
+                                    <m:Text text="{viewModel>Email}" />
                                 </m:ColumnListItem>
                             </m:Table>
                         </blocks>
@@ -248,15 +270,28 @@
 
         <footer>
             <m:OverflowToolbar visible="{= ${viewModel>/editMode}}">
+                <m:Button
+                    id="messagePopoverButton"
+                    type="Negative"
+                    text="{= ${message>/}.length }"
+                    press="handleMessagePopoverPress"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                />
+                <m:Button
+                    press="onPressTestEventBus"
+                    type="Accept"
+                    text="test event bus"
+                />
                 <m:ToolbarSpacer />
                 <m:Button
-                    type="Accept"
+                    type="Emphasized"
                     text="{i18n>save}"
                     press="onPressOkEdit"
+                    enabled="{= ${message>/}.length === 0  }"
                 />
                 <m:Button
                     id="cancelEditModeBtn"
-                    type="Reject"
                     text="{i18n>reset}"
                     press="onPressCancelEdit"
                 />

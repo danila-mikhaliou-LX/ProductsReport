@@ -81,7 +81,6 @@
                                         }"
                                         valueHelpRequest="handleValueHelp"
                                         tokenUpdate="onMultiInputTokenUpdate"
-                                        onChange='onMultiInputTokenUpdate'
                                     >
                                         <core:Item
                                             key="{data>ProducerId}"
@@ -120,6 +119,7 @@
                         <Button
                             text="{i18n>create}"
                             class="sapUiTinyMarginBegin"
+                            press="onCreateProduct"
                         />
                     </HBox>
                 </HBox>

@@ -13,7 +13,14 @@ sap.ui.define(
 
       onPressNavigateToDetails(oEvent) {
         const productId = oEvent.getSource().getBindingContext('data').getProperty('ProductId');
+        this.getOwnerComponent()
+          .getEventBus()
+          .publish('test', 'delivered', { name: 'testing event bus' });
         this._navigate('ProductDetails', { productId });
+      },
+
+      onCreateProduct() {
+        this._navigate('ProductDetails', { productId: crypto.randomUUID(), create: 'create' });
       },
 
       async handleValueHelp() {

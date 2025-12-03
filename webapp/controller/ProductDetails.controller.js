@@ -1,6 +1,12 @@
 sap.ui.define(
-  ['productsreport/controller/BaseController', 'sap/ui/model/json/JSONModel', 'sap/m/MessageBox'],
-  (BaseController, JSONModel, MessageBox) => {
+  [
+    'productsreport/controller/BaseController',
+    'sap/ui/model/json/JSONModel',
+    'sap/m/MessageBox',
+    'sap/ui/core/Messaging',
+    'sap/base/util/deepEqual',
+  ],
+  (BaseController, JSONModel, MessageBox, Messaging, deepEqual) => {
     'use strict';
 
     return BaseController.extend('productsreport.controller.ProductDetails', {
@@ -9,7 +15,13 @@ sap.ui.define(
           selectedProduct: {},
           initialSelectedProduct: {},
           editMode: false,
+          createMode: false,
+          productId: '',
         };
+
+        this.getView().setModel(Messaging.getMessageModel(), 'message');
+        Messaging.registerObject(this.getView(), true);
+
         this.getView().setModel(new JSONModel(oViewData), 'viewModel');
         this.getOwnerComponent()
           .getRouter()
@@ -18,18 +30,24 @@ sap.ui.define(
       },
 
       onPatternMatched(oEvent) {
-        this.getView().getModel('viewModel').setProperty('/editMode', false);
+        const oViewModel = this.getView().getModel('viewModel');
+        oViewModel.setProperty('/editMode', !!oEvent.getParameter('arguments').create);
+        oViewModel.setProperty('/createMode', oEvent.getParameter('arguments').create);
 
         const sProductId = oEvent.getParameter('arguments').productId;
+        oViewModel.setProperty('/productId', sProductId);
+
         const oSelectedProduct = this.getView()
           .getModel('data')
           .getProperty('/Products')
           .find((oProduct) => oProduct.ProductId === `${sProductId}`);
 
-        const oViewModel = this.getView().getModel('viewModel');
-
         oViewModel.setProperty('/selectedProduct', oSelectedProduct);
         oViewModel.setProperty('/initialSelectedProduct', { ...oSelectedProduct });
+        this.byId('multiInputWithValueHelpEdit').setTokens([]);
+        this.getOwnerComponent()
+          .getEventBus()
+          .subscribe('test', 'delivered', this.onPressTestEventBus, this);
       },
 
       onDeleteProductPress() {
@@ -75,6 +93,11 @@ sap.ui.define(
         }
 
         oMultiInputEdit.setTokens(aSelectedProductTokens);
+
+        const aInputsEdit = this.getView()
+          .getControlsByFieldGroupId('editInput')
+          .filter((el) => el.isA('sap.m.Input'))
+          .filter((el) => !el.getId().endsWith('-popup-input'))[0];
       },
 
       async handleValueHelp() {
@@ -165,39 +188,53 @@ sap.ui.define(
       onPressCancelEdit() {
         const oViewModel = this.getView().getModel('viewModel');
 
-        MessageBox.confirm(this._i18n('resetAllChangesConfirmation'), {
-          actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
-          emphasizedAction: MessageBox.Action.OK,
-          onClose: (sAction) => {
-            if (sAction === MessageBox.Action.OK) {
-              oViewModel.setProperty('/editMode', false);
+        const oInitialSelectedProduct = oViewModel.getProperty('/initialSelectedProduct');
+        const oSelectedProduct = oViewModel.getProperty('/selectedProduct');
 
-              oViewModel.setProperty(
-                '/initialSelectedProduct',
-                oViewModel.getProperty('/selectedProduct'),
-              );
-            }
-          },
-        });
+        if (deepEqual(oInitialSelectedProduct, oSelectedProduct)) {
+          oViewModel.setProperty('/editMode', false);
+        } else {
+          MessageBox.confirm(this._i18n('resetAllChangesConfirmation'), {
+            actions: [MessageBox.Action.OK, MessageBox.Action.CANCEL],
+            emphasizedAction: MessageBox.Action.OK,
+            onClose: (sAction) => {
+              if (sAction === MessageBox.Action.OK) {
+                oViewModel.setProperty('/initialSelectedProduct', {
+                  ...oViewModel.getProperty('/selectedProduct'),
+                });
+                oViewModel.setProperty('/editMode', false);
+              }
+            },
+          });
+        }
       },
 
       onPressOkEdit() {
         const oViewModel = this.getView().getModel('viewModel');
         const oData = this.getView().getModel('data');
-
-        oViewModel.setProperty('/editMode', false);
-
         const aProducts = oData.getProperty('/Products');
         const oInitialSelectedProduct = oViewModel.getProperty('/initialSelectedProduct');
-        oViewModel.setProperty('/selectedProduct', { ...oInitialSelectedProduct });
         const oSelectedProduct = oViewModel.getProperty('/selectedProduct');
+        oViewModel.setProperty('/editMode', false);
 
-        const aFilteredProducts = aProducts.filter(
-          (oProduct) => oProduct.ProductId !== oSelectedProduct.ProductId,
-        );
-        aFilteredProducts.push(oSelectedProduct);
-        oData.setProperty('/Products', [...aFilteredProducts]);
-        oData.refresh();
+        if (!oViewModel.getProperty('/createMode')) {
+          oViewModel.setProperty('/selectedProduct', { ...oInitialSelectedProduct });
+          const aFilteredProducts = aProducts.filter(
+            (oProduct) => oProduct.ProductId !== oSelectedProduct.ProductId,
+          );
+          aFilteredProducts.push(oSelectedProduct);
+          oData.setProperty('/Products', [...aFilteredProducts]);
+          oData.refresh();
+        } else {
+          aProducts.push({
+            ProductId: oViewModel.getProperty('/productId'),
+            ...oInitialSelectedProduct,
+          });
+          oViewModel.setProperty('/selectedProduct', { ...oInitialSelectedProduct });
+          this.byId('multiInputWithValueHelpEdit').setTokens([]);
+          oData.setProperty('/Products', [...aProducts]);
+          oData.refresh();
+        }
       },
 
       onPressDeleteSupplier() {
@@ -244,9 +281,59 @@ sap.ui.define(
 
         oDeleteSupplierButton.setEnabled(!!oEvent.getSource().getSelectedItems().length);
       },
-      onChangeSuppliersSelect() {
-        const oSuppliersTable = this.byId('suppliersTable');
-        const oSuppliersComboBox = this.byId('suppliersComboBox');
+
+      onChangeSuppliersSelect(oEvent) {
+        const aRowItems = oEvent.getSource().getParent().getParent().getCells();
+        const oKey = oEvent.getSource().getSelectedKey();
+        const aSuppliers = this.getView().getModel('data').getProperty('/Suppliers');
+        const oSelectedSupplierInfo = aSuppliers.filter(
+          (oSupplier) => oSupplier.SupplierId === oKey,
+        );
+        aRowItems[0].getItems()[0].setText(oSelectedSupplierInfo[0].SupplierName);
+        aRowItems[0].getItems()[1].setSelectedKey(oSelectedSupplierInfo[0].SupplierId);
+        aRowItems[1].setText(oSelectedSupplierInfo[0].Location);
+        aRowItems[2].setText(oSelectedSupplierInfo[0].Email);
+      },
+
+      onPressCreateSupplier() {
+        const aSuppliers = this.getView()
+          .getModel('viewModel')
+          .getProperty('/initialSelectedProduct').Suppliers;
+        const oNewSupplier = {
+          SupplierId: '',
+          SupplierName: '',
+          Location: '',
+          Email: '',
+        };
+        aSuppliers
+          ? aSuppliers.push(oNewSupplier)
+          : (this.getView().getModel('viewModel').getProperty('/initialSelectedProduct').Suppliers =
+              [oNewSupplier]);
+        this.getView().getModel('viewModel').refresh();
+      },
+      async handleMessagePopoverPress(oEvent) {
+        const oSourceControl = oEvent.getSource();
+
+        const oMessagePopover = await this.loadFragment({
+          name: 'productsreport.fragment.MessagePopover',
+        });
+        oMessagePopover.openBy(oSourceControl);
+        const oMessageModel = this.getView().getModel('message');
+        const aMessages = oMessageModel.getData();
+
+        aMessages.map((oMessage) => {
+          oMessage.description = sap.ui
+            .getCore()
+            .byId(oMessage.controlIds)
+            .getParent()
+            .getParent()
+            .getItems()[0]
+            .getText();
+        });
+        oMessageModel.refresh();
+      },
+      onPressTestEventBus(channel, event, data) {
+        console.log('delivered bus', data.name);
       },
     });
   },
