@@ -7,6 +7,13 @@
     "applicationVersion": {
       "version": "0.0.1"
     },
+    "dataSources": {
+      "mainService": {
+        "uri": "http://localhost:4004/v2/root/",
+        "type": "OData",
+        "settings": { "odataVersion": "2.0" }
+      }
+    },
     "title": "{{appTitle}}",
     "description": "{{appDescription}}",
     "resources": "resources.json",
@@ -51,6 +58,9 @@
         "settings": {
           "bundleName": "productsreport.i18n.i18n"
         }
+      },
+      "": {
+        "dataSource": "mainService"
       },
       "data": { "type": "sap.ui.model.json.JSONModel", "uri": "./model/data.json" }
     },

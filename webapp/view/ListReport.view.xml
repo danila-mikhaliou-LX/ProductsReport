@@ -47,8 +47,8 @@
                                 </fb:control>
                             </fb:FilterGroupItem>
                             <fb:FilterGroupItem
-                                name="Category"
-                                label="{i18n>category}"
+                                name="Status"
+                                label="{i18n>status}"
                                 groupName="productFilter"
                                 visibleInFilterBar="true"
                             >
@@ -57,15 +57,16 @@
                                         id="comboBoxProducts"
                                         width="90%"
                                         selectionChange='onSearchAction'
-                                        items="{data>/Categories}"
+                                        items="{viewModel>/statusTypes}"
                                     >
                                         <core:Item
-                                            key="{data>CategoryId}"
-                                            text="{data>CategoryName}"
+                                            key="{= ${viewModel>} === 'OUT_OF_STOCK' ? 'OUT_OF_STOCK' : ${viewModel>} === 'OK' ? 'OK' : ${viewModel>} === 'STORAGE' ? 'STORAGE' : 'NONE'}"
+                                            text="{= ${viewModel>} === 'OUT_OF_STOCK' ? ${i18n>outOfStock} : ${viewModel>} === 'OK' ? ${i18n>ok} : ${viewModel>} === 'STORAGE' ? ${i18n>storage} : ${i18n>none}}"
                                         />
                                     </MultiComboBox>
                                 </fb:control>
                             </fb:FilterGroupItem>
+
                             <fb:FilterGroupItem
                                 name="Producer"
                                 label="{i18n>producer}"
@@ -73,20 +74,25 @@
                                 visibleInFilterBar="true"
                             >
                                 <fb:control>
-                                    <MultiInput
-                                        id="multiInputWithValueHelp"
-                                        suggestionItems="{path: 'data>/Producers', 
-                                        sorter: {
-                                        path:'ProducerName'}
-                                        }"
-                                        valueHelpRequest="handleValueHelp"
-                                        tokenUpdate="onMultiInputTokenUpdate"
-                                    >
-                                        <core:Item
-                                            key="{data>ProducerId}"
-                                            text="{data>ProducerName}"
-                                        />
-                                    </MultiInput>
+                                    <SearchField
+                                        liveChange="onSearchAction"
+                                        id="searchFieldMadeIn"
+                                    />
+                                </fb:control>
+                            </fb:FilterGroupItem>
+                            <fb:FilterGroupItem
+                                name="Rating"
+                                label="{i18n>rating}"
+                                groupName="productFilter"
+                                visibleInFilterBar="true"
+                            >
+                                <fb:control>
+                                    <RatingIndicator
+                                        iconSize="1rem"
+                                        change="onSearchAction"
+                                        id="ratingProducts"
+                                        maxValue="5"
+                                    />
                                 </fb:control>
                             </fb:FilterGroupItem>
                         </fb:filterGroupItems>
@@ -103,8 +109,9 @@
                 >
                     <Title
                         core:require="{Formatter: 'productsreport/utils/formatter'}"
+
                         text="{
-                        parts: ['i18n>productsCount', 'data>/Products/length'],
+                        parts: ['i18n>productsCount', 'viewModel>/productsCount'],
                         formatter: 'Formatter.formatProductsCount'}"
                         level="H2"
                     />
@@ -129,12 +136,17 @@
                     sticky="HeaderToolbar,ColumnHeaders"
                     mode="MultiSelect"
                     inset="false"
+                    updateFinished="onProductsTableUpdateFinished"
                     items="{
-							path: 'data>/Products',
-							sorter: {
-								path: 'ProductName'
-							}
-						}"
+                							path: '/Products',
+                              factory: '.createContentProducts',
+	                						sorter: {
+	                							path: 'Name'
+	                						},
+                             parameters: {
+                             operationMode: 'Server'
+                             }        
+		                				}"
                     class="sapFDynamicPageAlignContent"
                     width="auto"
                     selectionChange="onSelectionChange"
@@ -147,8 +159,29 @@
                             minScreenWidth="Tablet"
                             demandPopin="true"
                         >
-                            <Text text="{i18n>category}" />
+                            <Text text="{i18n>specs}" />
                         </Column>
+                        <Column
+                            minScreenWidth="Tablet"
+                            demandPopin="true"
+                            hAlign='Center'
+                        >
+                            <Text text="{i18n>rating}" />
+                        </Column>
+
+                        <Column
+                            minScreenWidth="Tablet"
+                            demandPopin="true"
+                        >
+                            <Text text="{i18n>supplierInfo}" />
+                        </Column>
+                        <Column
+                            minScreenWidth="Tablet"
+                            demandPopin="true"
+                        >
+                            <Text text="{i18n>madeIn}" />
+                        </Column>
+
                         <Column
                             minScreenWidth="Tablet"
                             demandPopin="true"
@@ -156,30 +189,12 @@
                             <Text text="{i18n>producer}" />
                         </Column>
                         <Column hAlign="End">
-                            <Text text="{i18n>quantity}" />
+                            <Text text="{i18n>price}" />
                         </Column>
                         <Column>
                             <Text text="{i18n>status}" />
                         </Column>
                     </columns>
-                    <items>
-                        <ColumnListItem
-                            type="Navigation"
-                            press=".onPressNavigateToDetails"
-                        >
-                            <cells>
-                                <Text text="{data>ProductName}" />
-                                <Text text="{data>Category}" />
-                                <Text text="{data>ProducerName}" />
-                                <Text text="{data>Quantity}" />
-                                <ObjectStatus
-                                    text="{= ${data>Quantity} > 100 ? ${i18n>tooMuch} : ${data>Quantity} > 40 ? ${i18n>good} : ${i18n>notEnough}}"
-                                    state="{= ${data>Quantity} > 100 ? 'Error' :${data>Quantity} > 40 ? 'Success' : 'Warning'}"
-                                />
-                                <Button text=">" />
-                            </cells>
-                        </ColumnListItem>
-                    </items>
                 </Table>
             </VBox>
         </f:content>
