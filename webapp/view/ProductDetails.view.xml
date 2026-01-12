@@ -1,0 +1,352 @@
+<mvc:View
+    controllerName="productsreport.controller.ProductDetails"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.uxap"
+    xmlns:m="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:forms="sap.ui.layout.form"
+>
+    <ObjectPageLayout
+        id="ObjectPageLayout"
+        upperCaseAnchorBar="false"
+        showFooter="true"
+    >
+        <headerTitle>
+            <ObjectPageDynamicHeaderTitle>
+                <expandedHeading>
+                    <m:Title text="{viewModel>/selectedProduct/Name}" />
+                </expandedHeading>
+
+                <snappedHeading>
+                    <m:Title text="{viewModel>/selectedProduct/Name}" />
+                </snappedHeading>
+
+                <actions>
+                    <m:Button
+                        id="editSelectedProductButton"
+                        text="{i18n>edit}"
+                        type="Emphasized"
+                        press="onEditPress"
+                        visible="{= !${viewModel>/editMode}}"
+                    />
+                    <m:Button
+                        id="deleteSelectedProductButton"
+                        text="{i18n>delete}"
+                        press="onDeleteProductPress"
+                        visible="{= !${viewModel>/editMode}}"
+                    />
+                </actions>
+            </ObjectPageDynamicHeaderTitle>
+        </headerTitle>
+
+        <headerContent>
+            <m:HBox wrap="Wrap">
+                <m:VBox class="sapUiMediumMarginEnd">
+                    <m:ObjectNumber
+                        number="{viewModel>/selectedProduct/Price_amount}"
+                        unit="{viewModel>/selectedProduct/Price_currency}"
+                    />
+
+                    <m:ObjectAttribute
+                        title="{i18n>madeIn}"
+                        text="{viewModel>/selectedProduct/MadeIn}"
+                    />
+                </m:VBox>
+                <m:VBox>
+                    <m:ObjectAttribute
+                        title="{i18n>producer}"
+                        text="{viewModel>/selectedProduct/ProductionCompanyName}"
+                    />
+                    <m:ObjectStatus
+                        title="{i18n>status}"
+                        text="{= ${viewModel>/selectedProduct/Status} === 'OUT_OF_STOCK' ? ${i18n>outOfStock} : ${viewModel>/selectedProduct/Status} === 'OK' ? ${i18n>ok} : ${viewModel>/selectedProduct/Status} === 'STORAGE' ? ${i18n>storage} : ${i18n>none}}"
+                        state="{= ${viewModel>/selectedProduct/Status} === 'OUT_OF_STOCK' ? 'Error' : ${viewModel>/selectedProduct/Status} === 'OK' ? 'Success' : ${viewModel>/selectedProduct/Status} === 'STORAGE' ? 'Warning' : None}"
+                        inverted="true"
+                    />
+                </m:VBox>
+            </m:HBox>
+        </headerContent>
+
+        <sections>
+            <ObjectPageSection
+                titleUppercase="false"
+                title="{i18n>productInfo}"
+            >
+                <subSections>
+                    <ObjectPageSubSection title="{i18n>productInfo}">
+                        <blocks>
+                            <forms:SimpleForm>
+                                <m:VBox id='productInfo'>
+                                    <m:VBox class="sapUiSmallMarginBottom">
+                                        <m:Label
+                                            text="{i18n>productName}"
+                                            required="{= ${viewModel>/editMode}}"
+                                        />
+                                        <m:VBox>
+                                            <m:Text
+                                                visible="{= !${viewModel>/editMode}}"
+                                                text="{viewModel>/selectedProduct/Name}"
+                                            />
+                                            <m:Input
+                                                fieldGroupIds="editInput"
+                                                visible="{= ${viewModel>/editMode}}"
+                                                value="{ 
+                                                  path: 'viewModel>/initialSelectedProduct/Name',
+                                                  type: 'sap.ui.model.type.String',
+                                                  constraints: { minLength: 2 }}"
+                                                width="60%"
+                                            />
+                                        </m:VBox>
+                                    </m:VBox>
+
+                                    <m:VBox class="sapUiSmallMarginBottom">
+                                        <m:Label
+                                            text="{i18n>producer}"
+                                            required="{= ${viewModel>/editMode}}"
+                                        />
+
+                                        <m:VBox>
+                                            <m:Text
+                                                visible="{= !${viewModel>/editMode}}"
+                                                text="{viewModel>/selectedProduct/ProductionCompanyName}"
+                                            />
+
+                                            <m:Input
+                                                fieldGroupIds="editInput"
+                                                visible="{= ${viewModel>/editMode}}"
+                                                value="{ 
+                                                  path: 'viewModel>/initialSelectedProduct/ProductionCompanyName',
+                                                  type: 'sap.ui.model.type.String',
+                                                  constraints: { minLength: 2 }}"
+                                                width="60%"
+                                            />
+                                        </m:VBox>
+                                    </m:VBox>
+
+                                    <m:VBox class="sapUiSmallMarginBottom">
+                                        <m:Label
+                                            text="{i18n>madeIn}"
+                                            required="{= ${viewModel>/editMode}}"
+                                        />
+
+                                        <m:VBox>
+                                            <m:Text
+                                                visible="{= !${viewModel>/editMode}}"
+                                                text="{viewModel>/selectedProduct/MadeIn}"
+                                            />
+
+                                            <m:Input
+                                                fieldGroupIds="editInput"
+                                                visible="{= ${viewModel>/editMode}}"
+                                                value="{ 
+                                                  path: 'viewModel>/initialSelectedProduct/MadeIn',
+                                                  type: 'sap.ui.model.type.String',
+                                                  constraints: { minLength: 2 }}"
+                                                width="60%"
+                                            />
+                                        </m:VBox>
+                                    </m:VBox>
+
+                                    <m:VBox class="sapUiSmallMarginBottom">
+                                        <m:Label
+                                            text="{i18n>specs}"
+                                            required="{= ${viewModel>/editMode}}"
+                                        />
+
+                                        <m:VBox>
+                                            <m:Text
+                                                visible="{= !${viewModel>/editMode}}"
+                                                text="{viewModel>/selectedProduct/Specs}"
+                                            />
+
+                                            <m:Input
+                                                fieldGroupIds="editInput"
+                                                visible="{= ${viewModel>/editMode}}"
+                                                value="{ 
+                                                  path: 'viewModel>/initialSelectedProduct/Specs',
+                                                  type: 'sap.ui.model.type.String',
+                                                  constraints: { minLength: 2 }}"
+                                                width="60%"
+                                            />
+                                        </m:VBox>
+                                    </m:VBox>
+
+                                    <m:VBox class="sapUiSmallMarginBottom">
+                                        <m:Label
+                                            text="{i18n>supplierInfo}"
+                                            required="{= ${viewModel>/editMode}}"
+                                        />
+
+                                        <m:VBox>
+                                            <m:Text
+                                                visible="{= !${viewModel>/editMode}}"
+                                                text="{viewModel>/selectedProduct/SupplierInfo}"
+                                            />
+
+                                            <m:Input
+                                                fieldGroupIds="editInput"
+                                                visible="{= ${viewModel>/editMode}}"
+                                                value="{ 
+                                                  path: 'viewModel>/initialSelectedProduct/SupplierInfo',
+                                                  type: 'sap.ui.model.type.String',
+                                                  constraints: { minLength: 2 }}"
+                                                width="60%"
+                                            />
+                                        </m:VBox>
+                                    </m:VBox>
+
+                                    <m:VBox class="sapUiSmallMarginBottom">
+                                        <m:Label
+                                            text="{i18n>status}"
+                                            required="{= ${viewModel>/editMode}}"
+                                        />
+                                        <m:VBox>
+                                            <m:Text
+                                                visible="{= !${viewModel>/editMode}}"
+                                                text="{= ${viewModel>/initialSelectedProduct/Status} === 'OUT_OF_STOCK' ? ${i18n>outOfStock} : ${viewModel>/initialSelectedProduct/Status} === 'OK' ? ${i18n>ok} : ${viewModel>/initialSelectedProduct/Status} === 'STORAGE' ? ${i18n>storage} : ${i18n>none}}"
+                                            />
+                                            <m:ComboBox
+                                                visible="{= ${viewModel>/editMode}}"
+                                                id="comboBoxEditProducts"
+                                                width="60%"
+                                                selectionChange='onSelectionChange'
+                                                items="{viewModel>/statusTypes}"
+                                                selectedKey="{viewModel>/initialSelectedProduct/Status}"
+                                                selectedItem="{viewModel>/initialSelectedProduct/Status}"
+                                            >
+                                                <core:Item
+                                                    key="{= ${viewModel>} === 'OUT_OF_STOCK' ? 'OUT_OF_STOCK' : ${viewModel>} === 'OK' ? 'OK' : ${viewModel>} === 'STORAGE' ? 'STORAGE' : 'NONE'}"
+                                                    text="{= ${viewModel>} === 'OUT_OF_STOCK' ? ${i18n>outOfStock} : ${viewModel>} === 'OK' ? ${i18n>ok} : ${viewModel>} === 'STORAGE' ? ${i18n>storage} : ${i18n>none}}"
+                                                />
+                                            </m:ComboBox>
+                                        </m:VBox>
+                                    </m:VBox>
+
+                                    <m:VBox class="sapUiSmallMarginBottom">
+                                        <m:Label
+                                            text="{i18n>price}"
+                                            required="{= ${viewModel>/editMode}}"
+                                        />
+                                        <m:VBox>
+                                            <m:ObjectNumber
+                                                visible="{= !${viewModel>/editMode}}"
+                                                number="{viewModel>/selectedProduct/Price_amount}"
+                                                unit="{viewModel>/selectedProduct/Price_currency}"
+                                            />
+                                            <m:HBox>
+                                                <m:Input
+                                                    fieldGroupIds="editInput"
+                                                    visible="{= ${viewModel>/editMode}}"
+                                                    value="{ path: 'viewModel>/initialSelectedProduct/Price_amount',
+                                                type:'sap.ui.model.type.Integer',
+                                                constraints: {
+                                                minimum: 1,
+                                                maximum: 10000
+                                                }
+                                                }"
+                                                    type="Number"
+                                                />
+                                                <m:ComboBox
+                                                    visible="{= ${viewModel>/editMode}}"
+                                                    id="comboBoxEditProductsCurrency"
+                                                    width="60%"
+                                                    items="{viewModel>/currency}"
+                                                    selectedKey="{viewModel>/initialSelectedProduct/Price_currency}"
+                                                    selectedItem="{viewModel>/initialSelectedProduct/Price_currency}"
+                                                >
+                                                    <core:Item
+                                                        key="{viewModel>}"
+                                                        text="{viewModel>}"
+                                                    />
+                                                </m:ComboBox>
+                                            </m:HBox>
+                                        </m:VBox>
+                                    </m:VBox>
+
+                                    <m:VBox class="sapUiSmallMarginBottom">
+                                        <m:Label text="{i18n>rating}" />
+                                        <m:VBox>
+                                            <m:RatingIndicator
+                                                editable="{= ${viewModel>/editMode}}"
+                                                value="{viewModel>/initialSelectedProduct/Rating}"
+                                                maxValue="5"
+                                            />
+                                        </m:VBox>
+                                    </m:VBox>
+                                </m:VBox>
+                            </forms:SimpleForm>
+                        </blocks>
+                    </ObjectPageSubSection>
+                </subSections>
+            </ObjectPageSection>
+            <ObjectPageSection
+                titleUppercase="false"
+                title="{i18n>comments}"
+            >
+                <subSections>
+                    <ObjectPageSubSection
+                        title="{i18n>comments}"
+                        showTitle="true"
+                    >
+                        <blocks>
+                            <m:VBox>
+                                <m:VBox>
+                                    <m:FeedInput
+                                        post="onPost"
+                                        class="sapUiSmallMarginTopBottom"
+                                    />
+                                    <m:RatingIndicator
+                                        id="postRating"
+                                        class='sapUiMediumMarginBegin'
+                                        maxValue="10"
+                                    />
+                                </m:VBox>
+
+                                <m:List items="{viewModel>/comments}">
+                                    <m:FeedListItem
+                                        sender="{viewModel>Author}"
+                                        text="{viewModel>Message}"
+                                        info="{i18n>rating}: {viewModel>Rating}"
+                                        timestamp="{
+                                            path: 'viewModel>createdAt',
+                                            type: 'sap.ui.model.type.DateTime',
+                                            formatOptions: {
+                                               pattern: 'EEE, MMM d, yyyy'
+                                            }
+                                        }"
+                                    />
+                                </m:List>
+                            </m:VBox>
+                        </blocks>
+                    </ObjectPageSubSection>
+                </subSections>
+            </ObjectPageSection>
+        </sections>
+
+        <footer>
+            <m:OverflowToolbar visible="{= ${viewModel>/editMode}}">
+                <m:Button
+                    id="messagePopoverButton"
+                    type="Negative"
+                    text="{= ${message>/}.length }"
+                    press="handleMessagePopoverPress"
+                    visible="{= ${message>/}.length > 0 }"
+                    ariaHasPopup="Dialog"
+                />
+
+                <m:ToolbarSpacer />
+                <m:Button
+                    type="Emphasized"
+                    text="{i18n>save}"
+                    press="onPressOkEdit"
+                    enabled="{= ${message>/}.length === 0  }"
+                />
+                <m:Button
+                    id="cancelEditModeBtn"
+                    text="{i18n>reset}"
+                    press="onPressCancelEdit"
+                />
+            </m:OverflowToolbar>
+        </footer>
+    </ObjectPageLayout>
+</mvc:View>

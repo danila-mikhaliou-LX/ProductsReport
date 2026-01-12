@@ -1,0 +1,13 @@
+<core:FragmentDefinition
+    xmlns="sap.ui.comp.valuehelpdialog"
+    xmlns:core="sap.ui.core"
+>
+    <ValueHelpDialog
+        title="{i18n>producer}"
+        cancel='onCloseValueHelp'
+        ok='onValueHelpOkPress'
+        key="ProducerId"
+        afterClose="onAfterCloseValueHelp"
+        descriptionKey="ProducerName"
+    />
+</core:FragmentDefinition>
